@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const helpers = require('./server/modules/helpers.js');
 const fs = require('fs');
 const recursiveReadSync = require('recursive-readdir-sync');
+const session = require('express-session');
+const config = require('./server/config.js');
 
 const mongodb = require('./server/modules/mongodb.js');
 
@@ -23,6 +25,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  secret: config.secret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true, maxAge: 1000 * 60 * 60 * 5 }
+}))
 app.use(express.static(path.join(__dirname, 'client/public')));
 
 // View helper methods
