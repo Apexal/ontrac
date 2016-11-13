@@ -1,6 +1,6 @@
 {
   "name": "app_name",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -17,5 +17,18 @@
     "pug": "^2.0.0-beta6",
     "recursive-readdir-sync": "^1.0.6",
     "serve-favicon": "~2.3.0"
-  }
+  },
+  "description": "A short description of the app.",
+  "main": "./bin/www",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Apexal/express-template.git"
+  },
+  "author": "Frank Matranga <thefrankmatranga@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Apexal/express-template/issues"
+  },
+  "homepage": "https://github.com/Apexal/express-template#readme"
 }
