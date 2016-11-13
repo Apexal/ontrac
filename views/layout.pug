@@ -1,0 +1,10 @@
+doctype html
+html
+  head
+    if defaultTitle !== pageTitle
+      title #{pageTitle} | #{defaultTitle}
+    else
+      title= defaultTitle
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    block content
