@@ -2,3 +2,6 @@ extends layout
 
 block content
   p Welcome to #{defaultTitle}
+  if user
+    b= user.displayName
+  a(href='Login') Login

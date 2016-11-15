@@ -9,6 +9,10 @@ html
   body
     header
       include /includes/header
+    
+    for message in flash
+      a.alert(class='alert-' + message.type)
+        p= message.message
 
     main
       block content
