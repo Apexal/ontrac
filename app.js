@@ -84,7 +84,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/auth/google',
-    passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/drive.file', 'profile', 'email'] }));
+    passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/drive.file', 'email'] }));
 
 app.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/login', failureFlash: true }),
