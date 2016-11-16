@@ -10,6 +10,7 @@ const fs = require('fs');
 const recursiveReadSync = require('recursive-readdir-sync');
 const session = require('express-session');
 const config = require('./config/config.json');
+const models = require('./models');
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -23,14 +24,17 @@ passport.use(new GoogleStrategy({
         callbackURL: 'http://localhost:3000/auth/google/callback'
     },
     function(accessToken, refreshToken, profile, cb) {
-        // Find user here
-        console.log(profile);
-
         // Make sure Regis email
         if (!profile.emails[0].value.endsWith('@regis.org')) {
             return cb(null, false, { message: 'You must use a Regis Google account!' });
         }
-        return cb(null, profile);
+        
+        const username = profile.emails[0].value.replace('@regis.org', '');
+        models.Student.findOne({
+            where: { username: username }
+        }).then((student) => {
+            return cb(null, student);
+        });
     }
 ));
 
