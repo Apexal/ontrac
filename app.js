@@ -39,11 +39,13 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user, cb) {
-  cb(null, user);
+  cb(null, user.id);
 });
 
-passport.deserializeUser(function(obj, cb) {
-  cb(null, obj);
+passport.deserializeUser(function(id, cb) {
+  models.Student.findById(id).then((student) => {
+     cb(null, student);     
+  });
 });
 
 const app = express();
