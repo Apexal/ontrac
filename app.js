@@ -9,12 +9,13 @@ const helpers = require('./server/modules/helpers.js');
 const fs = require('fs');
 const recursiveReadSync = require('recursive-readdir-sync');
 const session = require('express-session');
-const config = require('./server/config.js');
+const config = require('./config/config.json');
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-const mongodb = require('./server/modules/mongodb.js');
+//const mongodb = require('./server/modules/mongodb.js');
+
 
 passport.use(new GoogleStrategy({
         clientID: config.auth.google_client_id,

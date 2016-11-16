@@ -1,4 +1,4 @@
-const config = require('../config.js');
+const config = require('../../config/config.json');
 
 const mongoose = require('mongoose');
 const dbURL = `mongodb://${config.database.host}:${config.database.port}/${config.database.name}`;
