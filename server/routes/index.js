@@ -14,6 +14,11 @@ router.get('/about', (req, res, next) => {
 });
 
 router.get('/login', (req, res) => {
+    if (req.isAuthenticated()) {
+      req.flash('warning', 'You are already logged in!')
+      res.redirect('/');
+      return;
+    }
     res.locals.pageTitle = 'Login';
 
     res.render('login');

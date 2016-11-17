@@ -1,0 +1,35 @@
+mixin link(url, name)
+    li(class=helpers.activeLink(url, pagePath))
+        a(href=helpers.decideHref(url, pagePath), title=helpers.getTitle(url))= name
+
+
+// Left links
+ul.nav.navbar-nav
+    +link('/', 'Home')
+    
+    if loggedIn
+        +link('#', 'Test')
+    else
+        +link('/about', 'About')
+    
+    li
+        a(href='https://github.com/Apexal/ontrac', target='new') Source Code
+        
+// Right links
+if loggedIn
+    ul.nav.navbar-nav.navbar-right
+        li.profile-pic
+            a(href='#', title='Looking good!')
+                img(src=user.mpicture)
+        li.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+                | #{user.first_name} #{user.last_name} 
+                span.caret
+            ul.dropdown-menu
+                li
+                    a(href='#') Another action
+                li.divider(role='separator')
+                +link('/logout', 'Logout')
+else
+    ul.nav.navbar-nav.navbar-right
+        +link('/login', 'Login')

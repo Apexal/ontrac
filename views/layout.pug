@@ -7,20 +7,21 @@ html
       title= defaultTitle
 
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    link(rel='stylesheet', href='http://bootswatch.com/cosmo/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     header
       include /includes/header
     
-    include /includes/alerts
-
     main
-      block content
+      div(class=( loggedIn ? 'container-fluid' : 'container' ))
+        include /includes/alerts
+        
+        block content
     
     footer
       include /includes/footer
     
-
     // Scripts
     script(src='https://code.jquery.com/jquery-3.1.1.slim.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')

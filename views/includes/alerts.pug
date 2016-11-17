@@ -1,2 +1,4 @@
-for message in flash
-    .alert(class='alert-' + message.type)= message.message
+while message = flash.shift()
+  .alert.alert-dismissible(role='alert', class='alert-' + (message.type == 'error' ? 'danger' : message.type))= message.message
+    button.close(type='button', data-dismiss='alert')
+        span &times;

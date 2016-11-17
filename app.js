@@ -85,8 +85,11 @@ app.locals.defaultTitle = 'OnTrac';
 app.use((req, res, next) => {
     res.locals.pageTitle = app.locals.defaultTitle;
     res.locals.pagePath = req.path;
-    res.locals.user = req.user;
+    
+    if (req.user)
+        res.locals.user = req.user;
 
+    res.locals.loggedIn = req.isAuthenticated();
     next();
 });
 
