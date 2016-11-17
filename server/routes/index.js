@@ -3,14 +3,14 @@ var router = express.Router();
 var models = require('../../models');
 
 /* GET home page. */
-router.get('/', (req, res, next) => {
-  res.render('index');
+router.get(['/', '/home'], (req, res, next) => {
+  res.render('index/index');
 });
 
 router.get('/about', (req, res, next) => {
   res.locals.pageTitle = 'About';
 
-  res.render('about');
+  res.render('index/about');
 });
 
 router.get('/login', (req, res) => {
@@ -21,7 +21,7 @@ router.get('/login', (req, res) => {
     }
     
     res.locals.pageTitle = 'Login';
-    res.render('login');
+    res.render('index/login');
 });
 
 router.get('/logout', function(req, res){

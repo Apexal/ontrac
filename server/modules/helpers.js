@@ -9,6 +9,7 @@ const linkTitles = {
 
 module.exports = {
     activeLink: (href, current) => {
+        current = (current == '/home' ? '/' : current);
         if (href == current) {
             return 'active';
         }
@@ -18,10 +19,12 @@ module.exports = {
        otherwise its just the url.
      */
     decideHref: (href, current) => {
+        current = (current == '/home' ? '/' : current);
         if (href == current) return '#';
         return href;
     },
     getTitle: (url) => {
+        url = (url == '/home' ? '/' : url);
         return linkTitles[url];
     }
 };
