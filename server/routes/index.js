@@ -19,14 +19,14 @@ router.get('/login', (req, res) => {
       res.redirect('/');
       return;
     }
+    
     res.locals.pageTitle = 'Login';
-
     res.render('login');
 });
 
 router.get('/logout', function(req, res){
   req.logout();
-  req.flash('info', 'Successful logout.')
+  req.flash('info', 'Successful logout.');
   res.redirect('/');
 });
 
