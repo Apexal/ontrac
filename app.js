@@ -81,7 +81,7 @@ for (var h in helpers) {
 }
 
 // ALL REQUESTS PASS THROUGH HERE FIRST
-app.locals.defaultTitle = 'App Name';
+app.locals.defaultTitle = 'OnTrac';
 app.use((req, res, next) => {
     res.locals.pageTitle = app.locals.defaultTitle;
     res.locals.pagePath = req.path;
