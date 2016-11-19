@@ -10,21 +10,22 @@ const userSchema = new Schema({
         last: { type: String, trim: true },
         nickname: { type: String, trim: true },
     },
+    profileImgUrl: { type: String, trim: true, default: '/images/profile.png' },
     school: { type: Schema.ObjectId, ref: 'School' },
     bio: { type: String, trim: true },
-    registered_date: { type: Date, default: Date.now },
+    registeredDate: { type: Date, default: Date.now },
     preferences: Object,
-    setup_status: {
+    setupStatus: {
         acceptedTOS: { type: Boolean, default: false },
         choseSchool: { type: Boolean, default: false },
         uploadedSchedule: { type: Boolean, default: false },
     },
     /* 
-        0 - Active
-        1 - Locked
-        2 - Disabled
+        0 - Never logged in/didn't set up yet
+        1 - Ready to Use
+        2 - Locked
     */
-    account_status: { type: Number, default: 0}
+    accountStatus: { type: Number, default: 0 }
 });
 
 // Instance methods

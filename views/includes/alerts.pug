@@ -1,11 +1,3 @@
-.alert.alert-danger.hidden-xs(role='alert')
-  b WARNING:
-  |  OnTrac is still in very early development and all features are subject to change and may not be up 24/7 for a while. Please use it accordingly.
-
-.alert.alert-danger.visible-xs(role='alert')
-  b WARNING:
-  |  OnTrac is still in early development so all features are subject to change.
-
 while message = flash.shift()
   .alert.alert-dismissible(role='alert', class='alert-' + (message.type == 'error' ? 'danger' : message.type))= message.message
     button.close(type='button', data-dismiss='alert')

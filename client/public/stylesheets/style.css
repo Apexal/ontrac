@@ -1,5 +1,6 @@
 body {
   padding-top: 70px; /* Since the top navbar is fixed */
+  padding-bottom: 20px;
 }
 
 nav .profile-pic a, nav .profile-pic img {

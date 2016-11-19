@@ -43,6 +43,9 @@ passport.use(new GoogleStrategy({
                         name: name
                     });
 
+                    if (profile.photos.length > 0)
+                        user.profileImgUrl = profile.photos[0].value;
+
                     user.save();
                 }
 
@@ -95,6 +98,16 @@ for (var h in helpers) {
     }
 }
 
+app.locals.requireLogin = (req, res) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'You must be logged in to view this page!');
+        res.redirect('/login');
+        return true;
+    }
+
+    return false;
+}
+
 // ALL REQUESTS PASS THROUGH HERE FIRST
 app.locals.defaultTitle = 'OnTrac';
 app.use((req, res, next) => {
@@ -116,8 +129,18 @@ app.get('/auth/google/callback',
     function(req, res) {
         // Successful authentication, redirect home.
         req.flash('info', 'Successful login.')
-        res.redirect('/');
-    });
+
+        if (req.user.accountStatus == 0) {
+            req.flash('warning', 'You have not set up your account yet! You will not be able to use many features until you do so!');
+            res.redirect('/account/setup');
+        } else if (req.user.accountStatus == 2) {
+            // Account is locked
+            req.flash('warning', 'Your account has been temporarily locked.');
+            res.redirect('/');
+        } else {
+            res.redirect('/');
+        }
+});
 
 // Dynamically load routes
 const routePath = path.join(__dirname, 'server/routes') + '/';
