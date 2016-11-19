@@ -101,6 +101,8 @@ for (var h in helpers) {
 app.locals.requireLogin = (req, res) => {
     if (!req.isAuthenticated()) {
         req.flash('error', 'You must be logged in to view this page!');
+        req.session.redirect = req.originalUrl;
+        console.log(req.originalUrl);
         res.redirect('/login');
         return true;
     }
@@ -118,6 +120,7 @@ app.use((req, res, next) => {
         res.locals.user = req.user;
 
     res.locals.loggedIn = req.isAuthenticated();
+    console.log(req.session);
     next();
 });
 
@@ -130,7 +133,14 @@ app.get('/auth/google/callback',
         // Successful authentication, redirect home.
         req.flash('info', 'Successful login.')
 
-        if (req.user.accountStatus == 0) {
+        if (req.session.redirect !== undefined) {
+            const redir = req.session['redirect'];
+
+            delete req.session['redirect'];
+            req.session['redirect'] = undefined;
+            
+            res.redirect(redir);
+        } else if (req.user.accountStatus == 0) {
             req.flash('warning', 'You have not set up your account yet! You will not be able to use many features until you do so!');
             res.redirect('/account/setup');
         } else if (req.user.accountStatus == 2) {
