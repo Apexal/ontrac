@@ -10,13 +10,11 @@ const fs = require('fs');
 const recursiveReadSync = require('recursive-readdir-sync');
 const session = require('express-session');
 const config = require('./config/config.json');
-const models = require('./models');
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-//const mongodb = require('./server/modules/mongodb.js');
-
+const mongodb = require('./server/modules/mongodb.js');
 
 passport.use(new GoogleStrategy({
         clientID: config.auth.google_client_id,
@@ -24,28 +22,48 @@ passport.use(new GoogleStrategy({
         callbackURL: 'http://localhost:3000/auth/google/callback'
     },
     function(accessToken, refreshToken, profile, cb) {
-        // Make sure Regis email
-        if (!profile.emails[0].value.endsWith('@regis.org')) {
-            return cb(null, false, { message: 'You must use a Regis Google account!' });
-        }
-        
-        const username = profile.emails[0].value.replace('@regis.org', '');
-        models.Student.findOne({
-            where: { username: username }
-        }).then((student) => {
-            return cb(null, student);
+        const email = profile.emails[0].value;
+
+        mongodb.User.findById(profile.id)
+            .then((user) => {
+                if (user) {
+                    console.log('Found!');
+                } else {
+                    console.log('New user!');
+
+                    const name = {
+                        first: ( profile.name.givenName.trim().length > 0 ? profile.name.givenName : 'New' ),
+                        last: ( profile.name.familyName.trim().length > 0 ? profile.name.familyName : 'Student' ),
+                        nickname: ( profile.displayName.trim().length > 0 ? profile.displayName : 'New Student' )
+                    }
+
+                    user = new mongodb.User({
+                        _id: profile.id,
+                        email: email,
+                        name: name
+                    });
+
+                    if (profile.photos.length > 0)
+                        user.profileImgUrl = profile.photos[0].value;
+
+                    user.save();
+                }
+
+                cb(null, user);
+        })
+        .catch((error) => {
+            console.log(error);
+            cb(null, false, { message: 'There was an error logging you in, please try again later.' });
         });
     }
 ));
 
 passport.serializeUser(function(user, cb) {
-  cb(null, user.id);
+  cb(null, user);
 });
 
-passport.deserializeUser(function(id, cb) {
-  models.Student.findById(id).then((student) => {
-     cb(null, student);     
-  });
+passport.deserializeUser(function(user, cb) {
+    cb(null, user);     
 });
 
 const app = express();
@@ -80,6 +98,18 @@ for (var h in helpers) {
     }
 }
 
+app.locals.requireLogin = (req, res) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'You must be logged in to view this page!');
+        req.session.redirect = req.originalUrl;
+        console.log(req.originalUrl);
+        res.redirect('/login');
+        return true;
+    }
+
+    return false;
+}
+
 // ALL REQUESTS PASS THROUGH HERE FIRST
 app.locals.defaultTitle = 'OnTrac';
 app.use((req, res, next) => {
@@ -90,6 +120,7 @@ app.use((req, res, next) => {
         res.locals.user = req.user;
 
     res.locals.loggedIn = req.isAuthenticated();
+    console.log(req.session);
     next();
 });
 
@@ -101,8 +132,25 @@ app.get('/auth/google/callback',
     function(req, res) {
         // Successful authentication, redirect home.
         req.flash('info', 'Successful login.')
-        res.redirect('/');
-    });
+
+        if (req.session.redirect !== undefined) {
+            const redir = req.session['redirect'];
+
+            delete req.session['redirect'];
+            req.session['redirect'] = undefined;
+            
+            res.redirect(redir);
+        } else if (req.user.accountStatus == 0) {
+            req.flash('warning', 'You have not set up your account yet! You will not be able to use many features until you do so!');
+            res.redirect('/account/setup');
+        } else if (req.user.accountStatus == 2) {
+            // Account is locked
+            req.flash('warning', 'Your account has been temporarily locked.');
+            res.redirect('/');
+        } else {
+            res.redirect('/');
+        }
+});
 
 // Dynamically load routes
 const routePath = path.join(__dirname, 'server/routes') + '/';

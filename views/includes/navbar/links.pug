@@ -8,6 +8,8 @@ ul.nav.navbar-nav
     +link('/', 'Home')
     
     if loggedIn
+        if user.accountStatus == 0
+            +link('/account/setup', 'SETUP ACCOUNT')
         +link('#', 'Test')
     else
         +link('/about', 'About')
@@ -20,14 +22,22 @@ if loggedIn
     ul.nav.navbar-nav.navbar-right
         li.profile-pic
             a(href='#', title='Looking good!')
-                img(src=user.mpicture)
+                img(src=user.profileImgUrl)
         li.dropdown
             a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                | #{user.first_name} #{user.last_name} 
+                | #{user.name.nickname} 
                 span.caret
             ul.dropdown-menu
-                li
-                    a(href='#') Another action
+                if user.name.nickname !== user.name.first + ' ' + user.name.last
+                    li.text-muted
+                        a(href='#')= user.name.first + ' ' + user.name.last
+                if user.accountStatus == 0
+                    li
+                        a(href='/account/setup')
+                            b Setup Account
+                else
+                    li
+                        a(href='/account') Profile
                 li.divider(role='separator')
                 +link('/logout', 'Logout')
 else
