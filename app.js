@@ -22,7 +22,36 @@ passport.use(new GoogleStrategy({
         callbackURL: 'http://localhost:3000/auth/google/callback'
     },
     function(accessToken, refreshToken, profile, cb) {
-        cb(null, profile);
+        const email = profile.emails[0].value;
+
+        mongodb.User.findById(profile.id)
+            .then((user) => {
+                if (user) {
+                    console.log('Found!');
+                } else {
+                    console.log('New user!');
+
+                    const name = {
+                        first: ( profile.name.givenName.trim().length > 0 ? profile.name.givenName : 'New' ),
+                        last: ( profile.name.familyName.trim().length > 0 ? profile.name.familyName : 'Student' ),
+                        nickname: ( profile.displayName.trim().length > 0 ? profile.displayName : 'New Student' )
+                    }
+
+                    user = new mongodb.User({
+                        _id: profile.id,
+                        email: email,
+                        name: name
+                    });
+
+                    user.save();
+                }
+
+                cb(null, user);
+        })
+        .catch((error) => {
+            console.log(error);
+            cb(null, false, { message: 'There was an error logging you in, please try again later.' });
+        });
     }
 ));
 

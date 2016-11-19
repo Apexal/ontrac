@@ -23,9 +23,12 @@ if loggedIn
                 img(src=user.mpicture)
         li.dropdown
             a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                | #{user.first_name} #{user.last_name} 
+                | #{user.name.nickname} 
                 span.caret
             ul.dropdown-menu
+                if user.name.nickname !== user.name.first + ' ' + user.name.last
+                    li.text-muted
+                        a(href='#')= user.name.first + ' ' + user.name.last
                 li
                     a(href='#') Another action
                 li.divider(role='separator')

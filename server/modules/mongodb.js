@@ -5,7 +5,7 @@ const config    = require(__dirname + '/../../config/config.json');
 const path = require('path');
 const basename = path.basename(module.filename);
 const mongoose = require('mongoose');
-const dbURL = `mongodb://${config[env].host}:${config[env].port}/${config[env].name}`;
+const dbURL = `mongodb://${config[env].host}:27017/${config[env].database}`;
 mongoose.connect(dbURL);
 const db = mongoose.connection;
 
@@ -23,7 +23,7 @@ db.once('open', (callback) => {
             models[schema.name] = mongoose.model(schema.name, schema.schema);
         });
 
-    console.log(models);
+    //console.log(models);
 });
 
 module.exports = models;
