@@ -10,13 +10,11 @@ const fs = require('fs');
 const recursiveReadSync = require('recursive-readdir-sync');
 const session = require('express-session');
 const config = require('./config/config.json');
-const models = require('./models');
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-//const mongodb = require('./server/modules/mongodb.js');
-
+const mongodb = require('./server/modules/mongodb.js');
 
 passport.use(new GoogleStrategy({
         clientID: config.auth.google_client_id,
@@ -24,28 +22,16 @@ passport.use(new GoogleStrategy({
         callbackURL: 'http://localhost:3000/auth/google/callback'
     },
     function(accessToken, refreshToken, profile, cb) {
-        // Make sure Regis email
-        if (!profile.emails[0].value.endsWith('@regis.org')) {
-            return cb(null, false, { message: 'You must use a Regis Google account!' });
-        }
-        
-        const username = profile.emails[0].value.replace('@regis.org', '');
-        models.Student.findOne({
-            where: { username: username }
-        }).then((student) => {
-            return cb(null, student);
-        });
+        cb(null, profile);
     }
 ));
 
 passport.serializeUser(function(user, cb) {
-  cb(null, user.id);
+  cb(null, user);
 });
 
-passport.deserializeUser(function(id, cb) {
-  models.Student.findById(id).then((student) => {
-     cb(null, student);     
-  });
+passport.deserializeUser(function(user, cb) {
+    cb(null, user);     
 });
 
 const app = express();
