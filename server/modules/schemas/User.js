@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     _id: { type: Number },
     email: { type: String, trim: true, unique: true },
-    grade: { type: Number, enum: [9, 10, 11, 12], default: 9 },
+    grade: { type: Number, min: 1, max: 12, default: 9 },
     name: {
         first: { type: String, trim: true },
         last: { type: String, trim: true },
