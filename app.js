@@ -116,11 +116,12 @@ app.use((req, res, next) => {
     res.locals.pageTitle = app.locals.defaultTitle;
     res.locals.pagePath = req.path;
     
+    req.db = mongodb;
+
     if (req.user)
         res.locals.user = req.user;
 
     res.locals.loggedIn = req.isAuthenticated();
-    console.log(req.session);
     next();
 });
 

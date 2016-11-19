@@ -26,5 +26,15 @@ module.exports = {
     getTitle: (url) => {
         url = (url == '/home' ? '/' : url);
         return linkTitles[url];
+    },
+    jsPaths: (path) => {
+        let paths = ['index.js'];
+        const urlParts = path.split("/").filter((value) => { return value.length > 0 });
+        for (let p in urlParts) {
+            const path = urlParts.slice(0, p+1).join('.') + '.js';
+            paths.push(path);
+        }
+
+        return paths;
     }
 };

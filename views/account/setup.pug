@@ -1,9 +1,28 @@
 extends /layout
 
+mixin school(school)
+  .col-xs-12.col-md-6
+    .panel.panel-default.school-panel(data-school-id=school.id)
+      .panel-body
+        h3 #{school.name} #{school.type}
+        if school.address
+          p.text-muted= school.address
+
+        if school.website
+          a(href=school.website, target='new')= school.website
+
 block content
   .row
     .col-xs-12
       .page-header
         h1 Account Setup
-    .col-xs-12
-      p Coming soon...
+  .row
+
+    select(id='school-select')
+      for s in schools
+        option(value=s.id)= s.name
+
+    for s in schools
+      +school(s)
+    
+    

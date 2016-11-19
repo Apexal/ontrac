@@ -22,8 +22,6 @@ db.once('open', (callback) => {
             var schema = require(path.join(__dirname + '/schemas/', file));
             models[schema.name] = mongoose.model(schema.name, schema.schema);
         });
-
-    //console.log(models);
 });
 
 module.exports = models;

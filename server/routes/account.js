@@ -16,7 +16,15 @@ router.get('/', (req, res, next) => {
 
 router.get('/setup', (req, res, next) => {
     res.locals.pageTitle = 'Setup';
-    res.render('account/setup');
+
+    const s = req.db.School();
+    s.name = 'School';
+    s.save();
+
+    req.db.School.find().then((schools) => { 
+        res.locals.schools = schools;
+        res.render('account/setup');
+    });
 });
 
 module.exports = router;
