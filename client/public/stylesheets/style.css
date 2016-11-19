@@ -8,3 +8,31 @@ nav .profile-pic a, nav .profile-pic img {
   margin: 0;
   height: 50px;
 }
+
+.jumbotron {
+  margin-bottom: 0;
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.larger {
+  font-size: 120%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.center {
+  text-align: center;
+}

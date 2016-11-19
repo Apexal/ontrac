@@ -7,7 +7,12 @@ const schoolSchema = new Schema({
     address: String,
     imageUrl: String,
     description: String,
-    website: String
+    website: String,
+    links: [{
+        iconName: { type: String, default: 'link' },
+        title: String,
+        url: String
+     }]
 });
 
 module.exports = { name: 'School', schema: schoolSchema };

@@ -7,6 +7,14 @@ mixin link(url, name)
 ul.nav.navbar-nav
     +link('/', 'Home')
     
+    if user.school
+        li.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+                | #{user.school.name} 
+                span.caret
+            ul.dropdown-menu
+                +link('/schools/regis', 'Schoolmates')
+
     if loggedIn
         if user.accountStatus == 0
             +link('/account/setup', 'SETUP ACCOUNT')
@@ -20,8 +28,8 @@ ul.nav.navbar-nav
 // Right links
 if loggedIn
     ul.nav.navbar-nav.navbar-right
-        li.profile-pic
-            a(href='#', title='Looking good!')
+        li.profile-pic.hidden-xs.hidden-sm
+            a(href='/account', title='Looking good!')
                 img(src=user.profileImgUrl)
         li.dropdown
             a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')

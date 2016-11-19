@@ -12,6 +12,7 @@ const userSchema = new Schema({
     },
     profileImgUrl: { type: String, trim: true, default: '/images/profile.png' },
     school: { type: Schema.ObjectId, ref: 'School' },
+    schedule: Object,
     bio: { type: String, trim: true },
     registeredDate: { type: Date, default: Date.now },
     preferences: Object,

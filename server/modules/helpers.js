@@ -4,6 +4,7 @@ const linkTitles = {
     '/': 'The home page.',
     '/login': 'Login to OnTrac with your Regis Google account.',
     '/about': 'Some info on the site.',
+    '/account/setup': 'Accept the TOS, chose a school, manage courses!',
     'https://github.com/Apexal/ontrac': 'View the code behind OnTrac. 100% open-source!'
 }
 

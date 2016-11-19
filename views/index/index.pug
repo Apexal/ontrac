@@ -1,7 +1,16 @@
 extends /layout
 
+mixin barLink(link)
+  a.btn.btn-default.fa(class=`fa-${link.iconName}`, title=link.title, target='new', href=link.url)
+
 block content
-  p Welcome to #{defaultTitle}
-  if user
-    b= user.displayName
-  a(href='Login') Login
+  .row
+    .jumbotron
+      h1 Good Morning, #[span(style='font-size: 80%;')= user.name.nickname]
+      
+      b Quote of the Day
+      p asdasdasd
+  .row.center
+    .full-width(style="background-color: #222")
+      for link in user.school.links
+        +barLink(link)

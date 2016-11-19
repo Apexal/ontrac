@@ -28,7 +28,7 @@ passport.use(new GoogleStrategy({
             .populate('school')
             .then((user) => {
                 if (user) {
-                    console.log('Found!');
+                    console.log('Found user!');
                 } else {
                     console.log('New user!');
 
