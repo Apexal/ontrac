@@ -3,7 +3,11 @@ var router = express.Router();
 
 /* GET home page. */
 router.get(['/', '/home'], (req, res, next) => {
-  res.render('index/index');
+
+  if (req.isAuthenticated())
+    res.render('index/index');
+  else
+    res.render('index/homepage');
 });
 
 router.get('/about', (req, res, next) => {
@@ -19,8 +23,7 @@ router.get('/login', (req, res) => {
       return;
     }
     
-    res.locals.pageTitle = 'Login';
-    res.render('index/login');
+    res.redirect('/auth/google');
 });
 
 router.get('/logout', function(req, res){

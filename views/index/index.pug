@@ -6,7 +6,7 @@ mixin barLink(link)
 block content
   .row
     .jumbotron
-      h1 Good Morning, #[span(style='font-size: 80%;')= user.name.nickname]
+      h1 Good #{helpers.getGreetingTime(moment())}, #[span(style='font-size: 80%;')= user.name.nickname]
       
       b Quote of the Day
       p asdasdasd

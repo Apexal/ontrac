@@ -2,8 +2,9 @@
 
 const linkTitles = {
     '/': 'The home page.',
-    '/login': 'Login to OnTrac with your Regis Google account.',
+    '/auth/google': 'Login to OnTrac with your Regis Google account.',
     '/about': 'Some info on the site.',
+    '/account': 'Change info such as name, courses, etc.',
     '/account/setup': 'Accept the TOS, chose a school, manage courses!',
     'https://github.com/Apexal/ontrac': 'View the code behind OnTrac. 100% open-source!'
 }
@@ -37,5 +38,24 @@ module.exports = {
         }
 
         return paths;
+    },
+    getGreetingTime: (m) => {
+        var g = null; //return g
+
+        if(!m || !m.isValid()) { return; } //if we can't find a valid or filled moment, we return.
+
+        var split_afternoon = 12 //24hr time to split the afternoon
+        var split_evening = 17 //24hr time to split the evening
+        var currentHour = parseFloat(m.format("HH"));
+
+        if(currentHour >= split_afternoon && currentHour <= split_evening) {
+            g = "Afternoon";
+        } else if(currentHour >= split_evening) {
+            g = "Evening";
+        } else {
+            g = "Morning";
+        }
+
+        return g;
     }
 };

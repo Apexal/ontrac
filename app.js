@@ -10,6 +10,7 @@ const fs = require('fs');
 const recursiveReadSync = require('recursive-readdir-sync');
 const session = require('express-session');
 const config = require('./config/config.json');
+const moment = require('moment');
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -75,7 +76,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.locals.basedir = path.join(__dirname, 'views');
-
+app.locals.moment = moment;
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico'))); TODO: add favicon
 app.use(compression());
 app.use(logger('dev'));
@@ -103,10 +104,9 @@ for (var h in helpers) {
 
 app.locals.requireLogin = (req, res) => {
     if (!req.isAuthenticated()) {
-        req.flash('error', 'You must be logged in to view this page!');
         req.session.redirect = req.originalUrl;
         console.log(req.originalUrl);
-        res.redirect('/login');
+        res.redirect('/auth/google');
         return true;
     }
 
@@ -132,7 +132,7 @@ app.get('/auth/google',
     passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/drive.file', 'email'] }));
 
 app.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/login', failureFlash: true }),
+    passport.authenticate('google', { failureRedirect: '/', failureFlash: true }),
     function(req, res) {
         // Successful authentication, redirect home.
         req.flash('info', 'Successful login.')
