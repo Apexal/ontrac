@@ -25,6 +25,7 @@ passport.use(new GoogleStrategy({
         const email = profile.emails[0].value;
 
         mongodb.User.findById(profile.id)
+            .populate('school')
             .then((user) => {
                 if (user) {
                     console.log('Found!');
@@ -59,11 +60,13 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user, cb) {
-  cb(null, user);
+    cb(null, user._id);
 });
 
-passport.deserializeUser(function(user, cb) {
-    cb(null, user);     
+passport.deserializeUser(function(id, cb) {
+    mongodb.User.findById(id).populate('school').then((user) => {
+        cb(null, user);
+    })   
 });
 
 const app = express();
