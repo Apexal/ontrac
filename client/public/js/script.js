@@ -43,6 +43,17 @@ Module('account-index',
         });
     }
 );
+Module('account-index',
+    () => {
+        return PAGE.startsWith('/assignments');
+    },
+    () => {
+        $('.calendar').fullCalendar({
+            weekends: false,
+            
+        });
+    }
+);
 Module('regis-schedule',
     () => {
         return ($('#upload-regis-schedule').length > 0);

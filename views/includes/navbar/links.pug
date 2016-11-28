@@ -17,6 +17,7 @@ ul.nav.navbar-nav
                     +link('/schools/'+user.school.name, 'Schoolmates')
         if user.accountStatus == 0
             +link('/account/setup', 'SETUP ACCOUNT')
+        +link('/assignments', 'Assignments')
     else
         +link('/about', 'About')
     

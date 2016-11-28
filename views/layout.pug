@@ -5,7 +5,8 @@ html
       title #{pageTitle} | #{defaultTitle}
     else
       title= defaultTitle
-
+    
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     link(rel='stylesheet', href='http://bootswatch.com/cosmo/bootstrap.min.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
@@ -27,5 +28,7 @@ html
     
     // Scripts
     
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     script(src='/js/script.js')

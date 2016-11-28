@@ -1,0 +1,19 @@
+extends /layout
+
+block content
+    .row
+        .col-xs-12
+            .page-header.center-sm
+                h1= date.format('dddd, MMMM Do, YYYY')
+    .row
+        .col-xs-12
+            .btn-group.right
+                button.btn.btn-default.active(id='list-view') List View
+                button.btn.btn-default(id='planner-view') Planner View
+            .btn-group
+                a.btn.btn-default(title=previousDay.format('dddd, MMM Do'), href='/assignments/' + previousDay.format('YYYY-MM-DD'), id='goto-previous-day') Previous Day
+                a.btn.btn-default(title=nextDay.format('dddd, MMM Do'), href='/assignments/' + nextDay.format('YYYY-MM-DD'), id='goto-next-day') Next Day
+                if !isToday
+                    a.btn.btn-default(href='/assignments/today', id='goto-today') Today
+            
+                

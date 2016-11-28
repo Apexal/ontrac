@@ -12,7 +12,7 @@ const linkTitles = {
 module.exports = {
     activeLink: (href, current) => {
         current = (current == '/home' ? '/' : current);
-        if (href == current) {
+        if ((href == '/' && current == href) || (href != '/' && current.startsWith(href))) {
             return 'active';
         }
     },

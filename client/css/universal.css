@@ -27,6 +27,18 @@ body {
   text-align: center;
 }
 
+@media only screen and (max-width : 768px) {
+  .center-sm {
+    text-align: center;
+  }
+}
+
+
 .jumbotron {
   margin-bottom: 0;
+}
+
+.black-bar {
+  background-color: #222;
+  text-align: center;
 }
