@@ -55,7 +55,7 @@ router.use(function(req, res, next) {
 
 router.get('/one/:id', (req, res) => {
     const assignmentId = req.params.id;
-    req.db.Assignment.findOne({ userEmail: req.user.userEmail, _id: assignmentId })
+    req.db.Assignment.findOne({ userEmail: req.user.email, _id: assignmentId })
         .exec()
         .then((assignment) => {
             if (!assignment) {
@@ -69,9 +69,48 @@ router.get('/one/:id', (req, res) => {
             else
                 res.send(assignmentToXML(assignment));
         })
-        .catch((_) => {
+        .catch((err) => {
             res.status(500);
-            res.send({ err: 'There was an error!' });
+            res.send({ err: err });
+        });
+});
+
+/* Updates an assignment's completion status */
+router.post('/one/:id', (req, res) => {
+    const assignmentId = req.params.id;
+    const newCompleted = req.body.completed;
+
+    if (newCompleted == undefined) {
+        res.status(500);
+        res.send({ err: 'Incomplete data!' });
+        return;
+    }
+
+    req.db.Assignment.findOne({ userEmail: req.user.email, _id: assignmentId })
+        .exec()
+        .then((assignment) => {
+            if (!assignment) {
+                res.status(500);
+                res.send({ err: 'No assignment found!'});
+                return;
+            }
+            res.status(200);
+
+            assignment.completed = newCompleted;
+
+            assignment.save((err) => {
+                if (err) throw err;
+
+                if (res.format == 'json') 
+                    res.json(assignment);
+                else
+                    res.send(assignmentToXML(assignment));
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500);
+            res.send({ err: err });
         });
 });
 

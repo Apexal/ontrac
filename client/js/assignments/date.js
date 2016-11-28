@@ -12,14 +12,13 @@ Module('assignments-date',
         function updateAssignments(cb) {
             $.getJSON('/api/assignments/' + date)
                 .done((ass) => {
-                    console.log(ass);
                     assignments = ass;
                     cb(ass);
                 })
                 .fail((jqxhr, textStatus, error) => {
                     console.log(error);
                     alert('There was an error loading the assignments.');
-                    location.reload();
+                    return;
                 });
         }
 
@@ -46,8 +45,6 @@ Module('assignments-date',
             assignments = organizeAssignments(assignments);
             container.empty();
 
-            
-
             for(let courseName in assignments) {
                 const items = assignments[courseName];
                 const div = $('<div>', {
@@ -65,7 +62,7 @@ Module('assignments-date',
                 const list = $('<ul>');
                 items.forEach((i) => {
                     const item = $('<li>', {
-                        class: 'assignment' + (i.completed ? 'completed' : ''),
+                        class: 'assignment' + (i.completed ? ' completed' : ''),
                         'data-assignment-id': i._id
                     });
                     item.text(i.description);
@@ -76,10 +73,10 @@ Module('assignments-date',
 
                 container.append(div);
             }
+            updateEventHandlers();
         }
 
         $('.refresh-assignments').click(() => {
-            console.log('a');
             updateAssignments((a) => {
                 assignments = a;
                 updateDisplay(assignments);
@@ -90,7 +87,6 @@ Module('assignments-date',
             assignments = a;
             updateDisplay(assignments);
         });
-
 
         /* ADD ASSIGNMENTS */
         function addAssignment() {
@@ -124,7 +120,29 @@ Module('assignments-date',
             if(e.keyCode == 13){
                 addAssignment();
             }
-        })
+        });
 
+        /* TOGGLE ASSIGNMENT COMPLETION STATUS */
+
+        function toggleAssignment() {
+            const assignmentId = $(this).data('assignment-id');            
+            const newCompleted = !$(this).hasClass('completed');
+
+            $.post(`/api/assignments/one/${assignmentId}`, { assignmentId: assignmentId, completed: newCompleted })
+                .done((data) => {
+                    for(let i in assignments) { if (assignments[i]._id == assignmentId) assignments[i] = data; }
+                    updateDisplay(assignments);
+                })
+                .fail((err) => {
+                    alert('There was an error!');
+                    console.log(err);
+                    return;
+                });
+        }
+
+        function updateEventHandlers() {
+            $('.assignment').click(toggleAssignment);
+        }
+        updateEventHandlers();
     }
 );
