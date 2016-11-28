@@ -1,7 +1,7 @@
 /* ALL STYLES FOR THE /account/* ROUTE */
 
 .add-course-form input[type='text'], .add-course-form button {
-    width: 33%;
+    width: 33.33%;
 }
 
 @media only screen and (max-width : 768px) {

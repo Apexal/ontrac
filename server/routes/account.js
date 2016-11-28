@@ -23,15 +23,29 @@ router.post('/addcourse', (req, res) => {
     
     req.db.User.findById(req.user._id).exec().then((user) => {
         user.courses.push({
-            title: newCourseName,
-            shortTitle: newCourseShortName
+            title: newCourseName.substring(0, 60),
+            shortTitle: newCourseShortName.substring(0, 60)
         });
 
         user.save(() => {
             req.flash('info', `Added course ${newCourseShortName} to list.`)
             res.redirect('/account');
         });
-    })
+    });
+});
+
+router.post('/removecourse', (req, res) => {
+    const courseName = req.body['course-name'];
+    if (!courseName) { res.json({ err: 'Invalid data passed. Missing course-name' }); return; }
+
+    req.db.User.findById(req.user._id).exec().then((user) => {
+        user.courses = user.courses.filter((c) => { return c.title != courseName });
+
+        user.save(() => {
+            req.flash('info', `Removed course ${courseName} from list.`)
+            res.json({ success: true });
+        });
+    });
 });
 
 router.get('/setup',(req, res, next) => {

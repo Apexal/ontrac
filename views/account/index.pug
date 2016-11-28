@@ -39,10 +39,10 @@ block content
               input.form-control(type='text', name='course-short-name', placeholder='Course Nickname')
               button.btn.btn-primary(type='submit') Add Course
         .col-xs-12
-          .list-group
+          .list-group.course-list
             if user.courses
               each c in user.courses
-                button.list-group-item= c.title
+                button.list-group-item.course-button(data-course-name=c.title)= c.title
                   span.hidden-xs.text-muted.right= c.shortTitle
             else
               h3.text-muted You have not yet added any courses!
