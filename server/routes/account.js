@@ -52,13 +52,7 @@ router.post('/setup/:action', (req, res, next) => {
             /*if (action == 'acceptTOS') {
                 
             } else if (action == 'chooseSchool') {
-                const schoolId = req.body['school-select'];
-                if(schoolId) {
-                    user.school = schoolId;
-                    user.setupStatus.choseSchool = true;
-                } else {
-                    req.flash('error', 'There was an error.');
-                }
+                
             } else if (action == 'uploadSchedule') {
                 if (req.files) {
                     console.log(req.files['schedule-file']);
@@ -71,9 +65,21 @@ router.post('/setup/:action', (req, res, next) => {
         });
 });
 
-/* Set's the user's status on the Terms of Service as accepted */
+/* Sets the user's status on the Terms of Service as accepted. */
 router.post('/setup/acceptTOS', (req, res, next) => {
     req.newUser.setupStatus.acceptedTOS = true;
+    next();
+});
+
+/* Sets the user's school. */
+router.post('/setup/chooseSchool', (req, res, next) => {
+    const schoolId = req.body['school-select'];
+    if(schoolId) {
+        req.newUser.school = schoolId;
+        req.newUser.setupStatus.choseSchool = true;
+    } else {
+        req.flash('error', 'There was an error.');
+    }
     next();
 });
 
