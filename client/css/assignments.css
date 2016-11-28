@@ -14,3 +14,11 @@
     text-decoration: line-through;
     color: #999999;
 }
+
+#homework-progress.low {
+    background-color: yellow;
+}
+
+#homework-progress.full {
+    background-color: green;
+}

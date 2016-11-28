@@ -44,6 +44,11 @@ Module('assignments-date',
                 return;
             }
             status.hide();
+            
+            // For statistics
+            let total = assignments.length;
+            let completed = 0;
+
             assignments = organizeAssignments(assignments);
             container.empty();
 
@@ -68,6 +73,8 @@ Module('assignments-date',
                         'data-assignment-id': i._id
                     });
                     
+                    if (i.completed) completed++;
+
                     const descriptionSpan = $('<span>', {
                         class: 'assignment-description'
                     });
@@ -85,6 +92,17 @@ Module('assignments-date',
                 div.append(list);
                 container.append(div);
             }
+
+            const percentDone = ( completed / total ) * 100;
+            $("#homework-progress").animate({ width: percentDone+'%' }, 500);
+            $('#homework-progress').removeClass('full');
+            $('#homework-progress').removeClass('low');
+            if (percentDone == 100)  {
+                $('#homework-progress').addClass('full');
+            } else if (percentDone < 34) {
+                $('#homework-progress').addClass('low');
+            }
+            
             updateEventHandlers();
         }
 
