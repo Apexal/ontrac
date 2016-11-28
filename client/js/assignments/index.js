@@ -1,4 +1,4 @@
-Module('account-index',
+Module('assignments-index',
     () => {
         return PAGE.startsWith('/assignments');
     },
