@@ -12,7 +12,26 @@ router.get('/',(req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    //update info
     res.redirect('/');
+});
+
+router.post('/addcourse', (req, res) => {
+    const newCourseName = req.body['course-name'];
+    const newCourseShortName = (req.body['course-short-name'] ? req.body['course-short-name'] : newCourseName);
+    if (!newCourseName) return next('Invalid form data!');
+    
+    req.db.User.findById(req.user._id).exec().then((user) => {
+        user.courses.push({
+            title: newCourseName,
+            shortTitle: newCourseShortName
+        });
+
+        user.save(() => {
+            req.flash('info', `Added course ${newCourseShortName} to list.`)
+            res.redirect('/account');
+        });
+    })
 });
 
 router.get('/setup',(req, res, next) => {
@@ -68,6 +87,7 @@ router.post('/setup/:action', (req, res, next) => {
 /* Sets the user's status on the Terms of Service as accepted. */
 router.post('/setup/acceptTOS', (req, res, next) => {
     req.newUser.setupStatus.acceptedTOS = true;
+    req.flash('info', 'Accepted Terms of Service.');
     next();
 });
 
@@ -77,6 +97,7 @@ router.post('/setup/chooseSchool', (req, res, next) => {
     if(schoolId) {
         req.newUser.school = schoolId;
         req.newUser.setupStatus.choseSchool = true;
+        req.flash('error', 'Set your school.');
     } else {
         req.flash('error', 'There was an error.');
     }
@@ -85,19 +106,29 @@ router.post('/setup/chooseSchool', (req, res, next) => {
 
 /* Accepts the uploaded schedule file and tries to parse it by school */
 router.post('/setup/uploadSchedule', upload.single('schedule-file'), (req, res, next) => {
-    console.log(req.file);
     const content = req.file.buffer.toString();
+    
     // Try to load the school-specific schedule parser
-    console.log(`Using parser for ${req.user.school.name}`);
-    const parser = require(`../modules/schools/${req.user.school.name}.js`);
+    if (!req.user.school) {
+        return next('You have not choosen a school yet!');
+    } else if (!req.user.school.scheduleAvailable) {
+        return next('Schedule uploading is not yet available for ' + req.user.school.name);
+    }
 
-    req.newUser.schedule = parser(content);
+    const parser = require(`../modules/schools/${req.user.school.name.toLowerCase()}.js`);
+
+    req.newUser.schedule = parser.parseSchedule(content);
+    req.flash('info', 'Uploaded schedule!');
+
+    if (req.newUser.courses.length == 0) {
+        req.newUser.courses = parser.getCoursesFromSchedule(req.newUser.schedule);
+        req.flash('info', 'Successfully got courses from schedule!');
+    }
 
     next();
 });
 
 router.post('/setup/:action', (req, res, next) => {
-    console.log('3');
     req.newUser.save(() => {
         res.redirect('/account/setup');
     });

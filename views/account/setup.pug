@@ -40,9 +40,14 @@ block content
         .panel.panel-info
           .panel-heading Upload Schedule
           .panel-body
-            form(method='POST', action='/account/setup/uploadSchedule', enctype='multipart/form-data', accept='.txt,.csv,.tsv')
-              input(type='file', name='schedule-file')
-              button.btn.btn-info Choose Schedule File
+            if !user.school
+              p.text-muted You must first choose your school before uploading a schedule. Also, only some schools work schedule uploading right now.
+            else if !user.school.scheduleAvailable
+              p.text-muted Schedule uploading for #[b= user.school.name] is not available yet.
+            else
+              form(method='POST', action='/account/setup/uploadSchedule', enctype='multipart/form-data', accept='.txt,.csv,.tsv')
+                input(type='file', name='schedule-file')
+                button.btn.btn-info Choose Schedule File
 
     if !user.setupStatus.choseSchool
       .col-xs-12.col-md-6
