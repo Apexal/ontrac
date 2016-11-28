@@ -20,19 +20,20 @@ function assignmentsToXML(assignments) {
     return data;
 }
 
-function assignmentToXML(assignment) {
+function assignmentToXML(a) {
+    console.log(a);
     return xmlbuilder.create({
         assignment: {
-            '@id': assignment._id,
-            '@userEmail': assignment.userEmail,
-            '@priority': assignment.priority,
-            '@dueDate': assignment.dueDate,
-            '@courseName': assignment.courseName,
-            '@link': (assignment.link ? assignment.link: ''),
-            '@completed': assignment.completed,
-            '#text': assignment.description,
+            '@id': a._id,
+            '@dueDate': a.dueDate,
+            '@userEmail': a.userEmail,
+            '@priority': a.priority,
+            '@courseName': a.courseName,
+            '@link': (a.link ? a.link: ''),
+            '@completed': a.completed,
+            '#text': a.description,
         }
-    });
+    }).end({pretty: true});
 }
 
 /* This entire route can only be used by logged in users. */
@@ -58,11 +59,8 @@ router.get('/one/:id', (req, res) => {
     req.db.Assignment.findOne({ userEmail: req.user.email, _id: assignmentId })
         .exec()
         .then((assignment) => {
-            if (!assignment) {
-                res.status(500);
-                res.send({ err: 'No assignment found!'});
-                return;
-            }
+            if (!assignment) throw 'No assignment found!';
+
             res.status(200);
             if (res.format == 'json') 
                 res.json(assignment);
@@ -70,6 +68,7 @@ router.get('/one/:id', (req, res) => {
                 res.send(assignmentToXML(assignment));
         })
         .catch((err) => {
+            console.log(err);
             res.status(500);
             res.send({ err: err });
         });
@@ -89,11 +88,8 @@ router.post('/one/:id', (req, res) => {
     req.db.Assignment.findOne({ userEmail: req.user.email, _id: assignmentId })
         .exec()
         .then((assignment) => {
-            if (!assignment) {
-                res.status(500);
-                res.send({ err: 'No assignment found!'});
-                return;
-            }
+            if (!assignment) throw 'No assignment found!';
+
             res.status(200);
 
             assignment.completed = newCompleted;
@@ -106,6 +102,29 @@ router.post('/one/:id', (req, res) => {
                 else
                     res.send(assignmentToXML(assignment));
             });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500);
+            res.send({ err: err });
+        });
+});
+
+router.delete('/one/:id', (req, res) => {
+    const assignmentId = req.params.id;
+
+    req.db.Assignment.find({ userEmail: req.user.email, _id: assignmentId }).remove()
+        .exec()
+        .then((assignment) => {
+            if (!assignment) {
+                throw 'No assignment found!';
+            }
+            res.status(200);
+
+            if (res.format == 'json') 
+                res.json(assignment);
+            else
+                res.send(assignmentToXML(assignment));
         })
         .catch((err) => {
             console.log(err);
@@ -173,9 +192,6 @@ router.put('/:date/add', (req, res, next) => {
     });
 });
 
-router.delete('/:date/remove', (req, res, next) => {
-
-});
 
 
 module.exports = router;

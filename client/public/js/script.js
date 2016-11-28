@@ -63,7 +63,7 @@ Module('assignments-date',
                 .fail((jqxhr, textStatus, error) => {
                     console.log(error);
                     alert('There was an error loading the assignments.');
-                    return;
+                    return; // Does not reload the page as if the website crashses, reloading will lose the current data
                 });
         }
 
@@ -80,8 +80,10 @@ Module('assignments-date',
             return data;
         } 
 
+        /* Takes the assignments array, organizes it, and then creates a display for it */
         function updateDisplay(assignments) {
             if (assignments.length == 0) {
+                container.empty();
                 status.show();
                 status.text('There are no assignments due this day.');
                 return;
@@ -110,12 +112,22 @@ Module('assignments-date',
                         class: 'assignment' + (i.completed ? ' completed' : ''),
                         'data-assignment-id': i._id
                     });
-                    item.text(i.description);
+                    
+                    const descriptionSpan = $('<span>', {
+                        class: 'assignment-description'
+                    });
+                    descriptionSpan.text(i.description);
+                    item.append(descriptionSpan);
 
+                    // Remove button
+                    const removeButton = $('<i>', {
+                        class: 'fa fa-close remove-assignment'
+                    });
+
+                    item.append(removeButton);
                     list.append(item);
                 });
                 div.append(list);
-
                 container.append(div);
             }
             updateEventHandlers();
@@ -168,10 +180,9 @@ Module('assignments-date',
         });
 
         /* TOGGLE ASSIGNMENT COMPLETION STATUS */
-
         function toggleAssignment() {
-            const assignmentId = $(this).data('assignment-id');            
-            const newCompleted = !$(this).hasClass('completed');
+            const assignmentId = $(this).parent().data('assignment-id');            
+            const newCompleted = !$(this).parent().hasClass('completed');
 
             $.post(`/api/assignments/one/${assignmentId}`, { assignmentId: assignmentId, completed: newCompleted })
                 .done((data) => {
@@ -185,8 +196,33 @@ Module('assignments-date',
                 });
         }
 
+        /* REMOVE ASSIGNMENT */
+        function removeAssignment() {
+            const assignmentId = $(this).parent().data('assignment-id');
+            if (!assignmentId) return;
+
+            $.ajax({
+                url: '/api/assignments/one/' + assignmentId,
+                method: 'DELETE',
+                data: {
+                    assignmentId: assignmentId
+                }
+            })
+            .done((data) => {
+                for(let i in assignments) { if (assignments[i]._id == assignmentId) assignments.splice(i, 1); }
+                updateDisplay(assignments);
+            })
+            .fail((jqxhr, textStatus, error) => {
+                console.log(error);
+                alert('There was an error deleting the assignment.');
+                return; 
+            });
+        }
+
+        /* When the assignments are re-rendered it removes all the previous event handlers so they must be added back */
         function updateEventHandlers() {
-            $('.assignment').click(toggleAssignment);
+            $('.assignment-description').off().click(toggleAssignment);
+            $('.remove-assignment').off().click(removeAssignment);
         }
         updateEventHandlers();
     }

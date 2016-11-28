@@ -10,7 +10,7 @@
     width: 10%;
 }
 
-.assignment.completed {
+.assignment.completed span {
     text-decoration: line-through;
     color: #999999;
 }
