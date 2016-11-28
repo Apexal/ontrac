@@ -35,6 +35,15 @@ block content
             form(method='POST', action='/account/setup/acceptTOS')
               include /includes/tos
     
+    if !user.setupStatus.uploadedSchedule
+      .col-xs-12.col-md-6
+        .panel.panel-info
+          .panel-heading Upload Schedule
+          .panel-body
+            form(method='POST', action='/account/setup/uploadSchedule', enctype='multipart/form-data', accept='.txt,.csv,.tsv')
+              input(type='file', name='schedule-file')
+              button.btn.btn-info Choose Schedule File
+
     if !user.setupStatus.choseSchool
       .col-xs-12.col-md-6
         .panel.panel-warning

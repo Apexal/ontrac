@@ -94,23 +94,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'client/public')));
 
+/* Middle-ware? to require login on certain routes, it uses the session to remember where the user wanted to go. */
+requireLogin = function(req, res, next) {
+    if (!req.isAuthenticated()) {
+        req.session.redirect = req.originalUrl;
+        console.log(req.originalUrl);
+        res.redirect('/auth/google');
+        return;
+    }
+    next();
+}
+
 // View helper methods
 app.locals.helpers = {};
 for (var h in helpers) {
     if (typeof(helpers[h]) === 'function') {
         app.locals.helpers[h] = helpers[h];
     }
-}
-
-app.locals.requireLogin = (req, res) => {
-    if (!req.isAuthenticated()) {
-        req.session.redirect = req.originalUrl;
-        console.log(req.originalUrl);
-        res.redirect('/auth/google');
-        return true;
-    }
-
-    return false;
 }
 
 // ALL REQUESTS PASS THROUGH HERE FIRST

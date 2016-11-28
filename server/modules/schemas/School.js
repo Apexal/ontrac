@@ -8,6 +8,7 @@ const schoolSchema = new Schema({
     imageUrl: String,
     description: String,
     website: String,
+    scheduleAvailable: { type: Boolean, default: false },
     links: [{
         iconName: { type: String, default: 'link' },
         title: String,

@@ -5,6 +5,8 @@ const config    = require(__dirname + '/../../config/config.json');
 const path = require('path');
 const basename = path.basename(module.filename);
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+
 const dbURL = `mongodb://${config[env].host}:27017/${config[env].database}`;
 mongoose.connect(dbURL);
 const db = mongoose.connection;

@@ -3,9 +3,10 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "gulp 'pre'; node ./bin/www"
   },
   "dependencies": {
+    "bluebird": "^3.4.6",
     "body-parser": "~1.15.2",
     "compression": "^1.6.2",
     "cookie-parser": "~1.4.3",
@@ -15,6 +16,7 @@
     "flash": "^1.1.0",
     "mongoose": "^4.6.7",
     "morgan": "~1.7.0",
+    "multer": "^1.2.0",
     "mysql": "^2.12.0",
     "passport": "^0.3.2",
     "passport-google-oauth20": "^1.0.0",
@@ -27,7 +29,12 @@
   },
   "description": "A short description of the app.",
   "main": "./bin/www",
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-uglify": "^2.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Apexal/express-template.git"
