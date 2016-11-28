@@ -29,7 +29,11 @@ body {
 
 @media only screen and (max-width : 768px) {
   .center-sm {
-    text-align: center;
+    text-align: center !important;
+  }
+
+  .full-width-sm {
+      width: 100% !important;
   }
 }
 
@@ -42,3 +46,4 @@ body {
   background-color: #222;
   text-align: center;
 }
+

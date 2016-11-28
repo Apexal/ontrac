@@ -35,9 +35,9 @@ block content
         .col-xs-12
           form.form-inline.add-course-form(action='/account/addcourse', method='POST')
             .form-group.full-width
-              input.form-control(type='text', name='course-name', placeholder='Course Full Title', required)
-              input.form-control(type='text', name='course-short-name', placeholder='Course Nickname')
-              button.btn.btn-primary(type='submit') Add Course
+              input.form-control.full-width-sm(type='text', name='course-name', placeholder='Course Full Title', required)
+              input.form-control.full-width-sm(type='text', name='course-short-name', placeholder='Course Nickname')
+              button.btn.btn-primary.full-width-sm(type='submit') Add Course
         .col-xs-12
           .list-group.course-list
             if user.courses

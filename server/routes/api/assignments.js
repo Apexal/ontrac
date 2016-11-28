@@ -99,17 +99,19 @@ router.get('/:date', (req, res, next) => {
 /* Adds assignment to a date. */
 router.put('/:date/add', (req, res, next) => {
     const userEmail = req.user.email;
+    const date = req.params.date;
+
     const priority = 1;
     if (req.body.priority && req.body.priority >= 0 && req.body.priority <= 3) 
         priority = req.body.priority;
-    const dueDate = moment(req.body.dueDate, 'YYYY-MM-DD', true);
+    const dueDate = moment(date, 'YYYY-MM-DD', true);
     const courseName = (req.body.courseName ? req.body.courseName.substring(0, 60) : 'Other');
     const description = req.body.description;
     const link = req.body.link;
     const completed = false;
 
-    if(!dueDate || !description)
-        return res.sendData({ err: 'Invalid data!' });
+    if(!description)
+        return res.send({ err: 'Invalid data!' });
 
     const newAssignment = new req.db.Assignment({
         userEmail: userEmail,
@@ -122,12 +124,17 @@ router.put('/:date/add', (req, res, next) => {
     });
 
     newAssignment.save((err) => {
-        if (err) return res.sendData({ err: err.message });
-        res.json({ success: true, newAssignment: newAssignment });
+        if (err) return res.send({ err: err.message });
+        res.status(200);
+        
+        if (res.format == 'json') 
+            res.json(newAssignment);
+        else
+            res.send(assignmentToXML(newAssignment));
     });
 });
 
-router.put('/:date/remove', (req, res, next) => {
+router.delete('/:date/remove', (req, res, next) => {
 
 });
 

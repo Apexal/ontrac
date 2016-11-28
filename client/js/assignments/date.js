@@ -78,7 +78,8 @@ Module('assignments-date',
             }
         }
 
-        $(".refresh-assignments").click(() => { 
+        $('.refresh-assignments').click(() => {
+            console.log('a');
             updateAssignments((a) => {
                 assignments = a;
                 updateDisplay(assignments);
@@ -89,5 +90,41 @@ Module('assignments-date',
             assignments = a;
             updateDisplay(assignments);
         });
+
+
+        /* ADD ASSIGNMENTS */
+        function addAssignment() {
+            const description = $('#new-assignment-description').val().trim();
+            const courseName = $('#new-assignment-course-name').val();
+            if(!description || !courseName) return false;
+
+            $.ajax({ 
+                url: `/api/assignments/${date}/add`,
+                type: 'PUT',
+                data: {
+                    courseName: courseName,
+                    description: description
+                },
+                success: (data) => {
+                    assignments.push(data);
+                    updateDisplay(assignments);
+
+                    $('#new-assignment-description').val('');
+                },
+                error: (jqXHR, textStatus, error) => {
+                    alert('There was an error adding the assignment!');
+                    return;
+                }
+            });
+        }
+
+        // Add assignment when button click or ENTER hit
+        $('.add-assignment').click(addAssignment);
+        $('#new-assignment-description').keydown((e) => {
+            if(e.keyCode == 13){
+                addAssignment();
+            }
+        })
+
     }
 );

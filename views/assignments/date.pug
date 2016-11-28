@@ -15,11 +15,20 @@ block content
                 a.btn.btn-default(title=nextDay.format('dddd, MMM Do'), href='/assignments/' + nextDay.format('YYYY-MM-DD'), id='goto-next-day') Next Day
                 if !isToday
                     a.btn.btn-default(href='/assignments/today', id='goto-today') Today
-            
+    .row
+        .col-xs-12
+            .form-inline.add-assignment-form.full-width
+                .form-group.full-width
+                    input.form-control.full-width-sm(id='new-assignment-description', type='text', name='description', placeholder='New Assignment', required)
+                    select.form-control(name='course-name', id='new-assignment-course-name',)
+                        each c in user.courses
+                            option(value=c.title)= c.shortTitle
+                        option(value='Other') Other    
+                    button.btn.btn-primary.full-width-sm.add-assignment(type='button') Add
     .row
         hr
         h3.text-center.text-muted.assignments-status Loading assignments...
         .assignments-container
     .row
-        button.btn.btn-default Reload   
-            i.fa.fa-refresh(class='refresh-assignments')
+        button.btn.btn-default.refresh-assignments Reload   
+            i.fa.fa-refresh

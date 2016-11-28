@@ -1,0 +1,11 @@
+.add-assignment-form input {
+    width: 60%;
+}
+
+.add-assignment-form select {
+    width: 30%;
+}
+
+.add-assignment-form button {
+    width: 10%;
+}
