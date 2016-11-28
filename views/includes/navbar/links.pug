@@ -14,10 +14,9 @@ ul.nav.navbar-nav
                     | #{user.school.name} 
                     span.caret
                 ul.dropdown-menu
-                    +link('/schools/regis', 'Schoolmates')
+                    +link('/schools/'+user.school.name, 'Schoolmates')
         if user.accountStatus == 0
             +link('/account/setup', 'SETUP ACCOUNT')
-        +link('#', 'Test')
     else
         +link('/about', 'About')
     
@@ -36,7 +35,7 @@ if loggedIn
                 span.caret
             ul.dropdown-menu
                 if user.name.nickname !== user.name.first + ' ' + user.name.last
-                    li.text-muted
+                    li
                         a(href='#')= user.name.first + ' ' + user.name.last
                 if user.accountStatus == 0
                     li
@@ -44,7 +43,7 @@ if loggedIn
                             b Setup Account
                 else
                     li
-                        a(href='/account') Profile
+                        a(href='/account') Edit Account
                 li.divider(role='separator')
                 +link('/logout', 'Logout')
 else

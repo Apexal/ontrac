@@ -21,7 +21,8 @@ const userSchema = new Schema({
         acceptedTOS: { type: Boolean, default: false },
         choseSchool: { type: Boolean, default: false },
         uploadedSchedule: { type: Boolean, default: false },
-        fillOutProfile: { type: Boolean, default: false }
+        fillOutProfile: { type: Boolean, default: false },
+        addedCourses: { type: Boolean, default: false }
     },
     /* 
         0 - Never logged in/didn't set up yet
@@ -38,6 +39,6 @@ userSchema.methods.findSchoolmates = (cb) => {
 
 userSchema.virtual('name.full').get(() => { 
     return this.firstName + ' ' + this.lastName;
- });
+});
 
 module.exports = { name: 'User', schema: userSchema };

@@ -69,3 +69,12 @@ block content
               hr
 
               button.btn.btn-warning(type='submit') Set
+
+    if !user.setupStatus.addedCourses || !user.setupStatus.fillOutProfile
+      .col-xs-12.col-md-6
+        .panel.panel-info
+          .panel-heading Fill Profile | Manage Courses
+          .panel-body
+            p.
+              Use the account page to change your account info and add/remove courses.
+            a.btn.btn-info.right(href='/account') Manage Account

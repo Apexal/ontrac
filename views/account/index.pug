@@ -10,10 +10,10 @@ block content
         .row
           .form-group.col-xs-12.col-sm-6
             label(for='firstName') First Name
-            input.form-control(type='text', name='firstName', placeholder=user.name.first)
+            input.form-control(type='text', name='first-name', placeholder=user.name.first)
           .form-group.col-xs-12.col-sm-6
             label(for='lastName') Last Name
-            input.form-control(type='text', name='lastName', placeholder=user.name.last)
+            input.form-control(type='text', name='last-name', placeholder=user.name.last)
           .form-group.col-xs-12.col-sm-6
             label(for='nickname') Nickname
             input.form-control(type='text', name='nickname', placeholder=user.name.nickname)
@@ -21,7 +21,7 @@ block content
           .form-group.col-xs-12
             hr
             label(for='bio') Bio
-            textarea.form-control(placeholder=(user.bio ? user.bio : "You haven't set a bio yet!" ))= (user.bio ? user.bio : '')
+            textarea.form-control(name='bio', placeholder=(user.bio ? user.bio : "You haven't set a bio yet!" ))= (user.bio ? user.bio : '')
         .row
           .col-xs-12
             hr

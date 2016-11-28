@@ -26,21 +26,6 @@ router.get('/login', (req, res) => {
     res.redirect('/auth/google');
 });
 
-router.get('/test/:id', (req, res, next) => {
-  console.log("1");
-  next();
-});
-
-router.get('/test/2', (req, res, next) => {
-  console.log("2");
-  next();
-});
-
-router.get('/test/:id', (req, res, next) => {
-  console.log("3");
-  res.redirect('/');
-});
-
 router.get('/logout', function(req, res){
   req.logout();
   req.flash('info', 'Successful logout.');
