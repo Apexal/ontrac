@@ -27,6 +27,7 @@ passport.use(new GoogleStrategy({
 
         mongodb.User.findById(profile.id)
             .populate('school')
+            .exec()
             .then((user) => {
                 if (user) {
                     console.log('Found user!');
@@ -65,9 +66,12 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.deserializeUser(function(id, cb) {
-    mongodb.User.findById(id).populate('school').then((user) => {
-        cb(null, user);
-    })   
+    mongodb.User.findById(id)
+        .populate('school')
+        .exec()
+        .then((user) => {
+            cb(null, user);
+        });   
 });
 
 const app = express();

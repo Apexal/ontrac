@@ -18,7 +18,7 @@ router.post('/', (req, res, next) => {
 router.get('/setup',(req, res, next) => {
     res.locals.pageTitle = 'Setup';
 
-    req.db.School.find().then((schools) => { 
+    req.db.School.find().exec().then((schools) => { 
         res.locals.schools = schools;
 
         let statuses = [{
@@ -46,6 +46,7 @@ router.get('/setup',(req, res, next) => {
 /* All setup actions will pass through here before going on to their specific routes for each action */
 router.post('/setup/:action', (req, res, next) => {
     req.db.User.findById(req.user._id)
+        .exec()
         .then((user) => {
             console.log('1');
             /*if (action == 'acceptTOS') {
