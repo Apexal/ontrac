@@ -5,32 +5,45 @@ block content
         .col-xs-12
             .page-header.center-sm(style='margin-bottom: 0')
                 h1(id='date', style='margin-bottom: 0', data-date=date.format('YYYY-MM-DD'))= date.format('dddd, MMMM Do, YYYY')
-            .progress(style="margin-top: 0;", data-toggle="tooltip", title="You are 0% done with your homework!")
-                .progress-bar#homework-progress(role="progressbar", style="width: 0%;")
+                    small.right.text-muted.assignment-count 0 total
+            .progress.assignment-progress-container(style="margin-top: 0;", data-toggle="tooltip", title="You are 0% done with your homework!")
+                .progress-bar.assignment-progress-bar(role="progressbar", style="width: 0%;")
     .row
         .col-xs-12
-            .btn-group.right
-                button.btn.btn-default.active(id='list-view') List View
-                button.btn.btn-default(id='planner-view') Planner View
-            .btn-group
-                a.btn.btn-default(title=previousDay.format('dddd, MMM Do'), href='/assignments/' + previousDay.format('YYYY-MM-DD'), id='goto-previous-day') Previous Day
-                a.btn.btn-default(title=nextDay.format('dddd, MMM Do'), href='/assignments/' + nextDay.format('YYYY-MM-DD'), id='goto-next-day') Next Day
-                if !isToday
-                    a.btn.btn-default(href='/assignments/today', id='goto-today') Today
+            .black-bar.clearfix
+                .btn-group.right
+                    button.btn.btn-default.active(id='list-view') List View
+                    button.btn.btn-default(id='planner-view') Planner View
+                .btn-group.left
+                    a.btn.btn-default(title=previousDay.format('dddd, MMM Do'), href='/assignments/' + previousDay.format('YYYY-MM-DD'), id='goto-previous-day')
+                        span.hidden-xs Previous Day
+                        i.visible-xs.fa.fa-arrow-left 
+                    a.btn.btn-default(title=nextDay.format('dddd, MMM Do'), href='/assignments/' + nextDay.format('YYYY-MM-DD'), id='goto-next-day')
+                        span.hidden-xs Next Day
+                        i.visible-xs.fa.fa-arrow-right 
+                    if !isToday
+                        a.btn.btn-default(href='/assignments/today', id='goto-today')
+                            span.hidden-xs Today
+                            b.visible-xs T
+                .statistics.hidden-xs
+                    span 0% completed
     .row
         .col-xs-12
             .form-inline.add-assignment-form.full-width
                 .form-group.full-width
-                    input.form-control.full-width-sm(id='new-assignment-description', type='text', name='description', placeholder='New Assignment', required)
-                    select.form-control(name='course-name', id='new-assignment-course-name',)
+                    input.form-control.full-width-sm(style='width: 60%', id='new-assignment-description', type='text', name='description', placeholder='New Assignment', required)
+                    select.form-control.full-width-sm(style='width: 30%', name='course-name', id='new-assignment-course-name',)
                         each c in user.courses
                             option(value=c.title)= c.shortTitle
                         option(value='Other') Other    
-                    button.btn.btn-primary.full-width-sm.add-assignment(type='button') Add
+                    button.btn.btn-primary.full-width-sm.add-assignment(style='width: 10%', type='button') Add
     .row
-        hr
+        br
         h3.text-center.text-muted.assignments-status Loading assignments...
         .assignments-container
     .row
-        button.btn.btn-default.refresh-assignments Reload   
-            i.fa.fa-refresh
+        .col-xs-12
+            hr
+            a.btn.btn-danger.right.export-assignments(href='/api/assignments/' + date.format('YYYY-MM-DD'), title='Right click and choose \'Save Link As\'!') Export
+            button.btn.btn-default.refresh-assignments Reload   
+                i.fa.fa-refresh

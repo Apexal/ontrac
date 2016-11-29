@@ -7,6 +7,7 @@ Module('assignments-date',
         const date = $('#date').data('date');
         const container = $('.assignments-container');
         const status = $('.assignments-status');
+        const progressBar = $('.assignment-progress-bar');
 
         let assignments = [];
         function updateAssignments(cb) {
@@ -41,12 +42,22 @@ Module('assignments-date',
                 container.empty();
                 status.show();
                 status.text('There are no assignments due this day.');
+                $('.assignment-count').text('0 total');
+                $('.export-assignments').hide();
+                progressBar.animate({ width: '0%' }, 500);
+                progressBar.removeClass('full');
+                progressBar.addClass('low');
+                progressBar.attr('title', `You are 0% done with your assignments!`);
+                $('.statistics span').text('0% completed');
+
                 return;
             }
             status.hide();
+            $('.export-assignments').show();
             
             // For statistics
             let total = assignments.length;
+            $('.assignment-count').text(total + ' total');
             let completed = 0;
 
             assignments = organizeAssignments(assignments);
@@ -81,32 +92,39 @@ Module('assignments-date',
                     descriptionSpan.text(i.description);
                     item.append(descriptionSpan);
 
-                    // Remove button
-                    const removeButton = $('<i>', {
-                        class: 'fa fa-close remove-assignment'
+                    // Remove button for non-phones
+                    const removeButtonPC = $('<i>', {
+                        class: 'fa fa-close remove-assignment hidden-xs hidden-sm hidden-md hidden-lg pc'
                     });
 
-                    item.append(removeButton);
+                    const removeButtonMobile = $('<i>', {
+                        class: 'fa fa-close remove-assignment visible-xs hidden-sm hidden-md hidden-lg mobile'
+                    });
+
+                    item.append(removeButtonPC);
+                    item.append(removeButtonMobile);
                     list.append(item);
                 });
                 div.append(list);
                 container.append(div);
             }
 
-            const percentDone = ( completed / total ) * 100;
-            $("#homework-progress").animate({ width: percentDone+'%' }, 500);
-            $('#homework-progress').removeClass('full');
-            $('#homework-progress').removeClass('low');
+            const percentDone = Math.round(( completed / total ) * 100);
+            progressBar.animate({ width: percentDone+'%' }, 500);
+            progressBar.removeClass('full');
+            progressBar.removeClass('low');
             if (percentDone == 100)  {
-                $('#homework-progress').addClass('full');
+                progressBar.addClass('full');
             } else if (percentDone < 34) {
-                $('#homework-progress').addClass('low');
+                progressBar.addClass('low');
             }
-            
+            progressBar.attr('title', `You are ${percentDone}% done with your assignments!`);
+            $('.statistics span').text(`${percentDone}% completed` + (( percentDone != 0 && percentDone != 100) ? ` (${completed} out of ${total})` : ''));
+
             updateEventHandlers();
         }
 
-        $('.refresh-assignments').click(() => {
+        $('.refresh-assignments').click(function() {
             updateAssignments((a) => {
                 assignments = a;
                 updateDisplay(assignments);
@@ -174,6 +192,8 @@ Module('assignments-date',
             const assignmentId = $(this).parent().data('assignment-id');
             if (!assignmentId) return;
 
+            if (!confirm('Remove assignment?')) return;
+
             $.ajax({
                 url: '/api/assignments/one/' + assignmentId,
                 method: 'DELETE',
@@ -196,6 +216,21 @@ Module('assignments-date',
         function updateEventHandlers() {
             $('.assignment-description').off().click(toggleAssignment);
             $('.remove-assignment').off().click(removeAssignment);
+
+            // Hover remove buttons
+            $('.assignment').each(function() {
+                const span = $(this).find('.assignment-span');
+                const removeIcon = $(this).find('i.remove-assignment.pc'); // Remove icon for non-phones
+
+                $(this).hover(() => {
+                    // On hover
+                    removeIcon.removeClass('hidden-sm hidden-md hidden-lg');
+                },
+                () => {
+                    // Off hover
+                    removeIcon.addClass('hidden-sm hidden-md hidden-lg');
+                });
+            });
         }
         updateEventHandlers();
     }

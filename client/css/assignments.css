@@ -10,15 +10,29 @@
     width: 10%;
 }
 
+.assignment-progress-container {
+    margin: 0;
+}
+
 .assignment.completed span {
     text-decoration: line-through;
     color: #999999;
 }
 
-#homework-progress.low {
-    background-color: yellow;
+.assignment-progress-bar.low {
+    background-color: red;
 }
 
-#homework-progress.full {
+.assignment-progress-bar.full {
     background-color: green;
+}
+
+.assignment .remove-assignment {
+    cursor: pointer;
+}
+
+.black-bar .statistics {
+    font-weight: bold;
+    padding-top: 10px;
+    color: white;
 }

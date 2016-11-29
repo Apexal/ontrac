@@ -21,7 +21,6 @@ function assignmentsToXML(assignments) {
 }
 
 function assignmentToXML(a) {
-    console.log(a);
     return xmlbuilder.create({
         assignment: {
             '@id': a._id,
@@ -165,7 +164,7 @@ router.put('/:date/add', (req, res, next) => {
     const dueDate = moment(date, 'YYYY-MM-DD', true);
     const courseName = (req.body.courseName ? req.body.courseName.substring(0, 60) : 'Other');
     const description = req.body.description;
-    const link = req.body.link;
+    const link = (req.body.link ? req.body.link.substring(0, 200) : undefined);
     const completed = false;
 
     if(!description)
@@ -175,8 +174,8 @@ router.put('/:date/add', (req, res, next) => {
         userEmail: userEmail,
         priority: priority,
         dueDate: dueDate,
-        courseName: courseName,
-        description: description,
+        courseName: courseName.substring(0, 60),
+        description: description.substring(0, 120),
         link: link,
         completed: completed
     });
