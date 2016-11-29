@@ -154,7 +154,7 @@ router.get('/:date', (req, res, next) => {
 });
 
 /* Adds assignment to a date. */
-router.put('/:date/add', (req, res, next) => {
+router.put('/:date', (req, res, next) => {
     const userEmail = req.user.email;
     const date = req.params.date;
 
@@ -190,7 +190,5 @@ router.put('/:date/add', (req, res, next) => {
             res.send(assignmentToXML(newAssignment));
     });
 });
-
-
 
 module.exports = router;

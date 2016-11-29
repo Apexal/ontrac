@@ -188,7 +188,7 @@ Module('assignments-date',
             if(!description || !courseName) return false;
 
             $.ajax({ 
-                url: `/api/assignments/${date}/add`,
+                url: `/api/assignments/${date}`,
                 type: 'PUT',
                 data: {
                     courseName: courseName,
