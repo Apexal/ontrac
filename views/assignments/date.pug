@@ -24,7 +24,7 @@ block content
                     if !isClosest
                         a.btn.btn-default(href='/assignments/closest', id='goto-closest')
                             span.hidden-xs Closest
-                            i.fa.fa-arrow-down.visible-xs
+                            b.visible-xs C
                     input.goto-date.form-control(type='text', placeholder='Go to date.', value=date.format('YYYY-MM-DD'))
                 .statistics.hidden-xs
                     span 0% completed
@@ -39,7 +39,7 @@ block content
                         option(value='Other') Other    
                     button.btn.btn-primary.full-width-sm.add-assignment(style='width: 10%', type='button') Add
     .row
-        br
+        br.hidden-xs
         h3.text-center.text-muted.assignments-status Loading assignments...
         .assignments-container
     .row

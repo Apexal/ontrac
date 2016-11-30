@@ -1,4 +1,5 @@
 #date {
+    margin-top: 5px;
 }
 
 .date-header {
@@ -37,6 +38,11 @@
 .assignment .remove-assignment {
     cursor: pointer;
 }
+
+.assignment .remove-assignment.mobile {
+    float: right;
+}
+
 
 .black-bar .statistics {
     font-weight: bold;

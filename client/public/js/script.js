@@ -25,6 +25,24 @@ $(() => {
         module.run();
     });
 });
+Module('account-index',
+    () => {
+        return PAGE.startsWith('/account');
+    },
+    () => {
+        $('.course-button').each((index, element) => {
+            const courseName = $(element).data('course-name');
+            console.log(courseName);
+            $(element).click(() => {
+                if (confirm(`Are you sure you want to remove ${courseName}?`)) {
+                    $.post('/account/removecourse', { 'course-name': courseName }, (data) => {
+                        location.reload();
+                    });
+                }
+            });
+        });
+    }
+);
 /* MODULE FOR SPECIFC ASSIGNMENT DAY PAGE */
 Module('assignments-date',
     () => {
@@ -199,6 +217,7 @@ Module('assignments-date',
                     updateDisplay(assignments);
 
                     $('#new-assignment-description').val('');
+                    $('#new-assignment-description').focus();
                 },
                 error: (jqXHR, textStatus, error) => {
                     alert('There was an error adding the assignment!');
@@ -212,6 +231,7 @@ Module('assignments-date',
         $('#new-assignment-description').keydown((e) => {
             if(e.keyCode == 13){
                 addAssignment();
+
             }
         });
 
@@ -291,24 +311,6 @@ Module('assignments-index',
                 var dateString = date.format('YYYY-MM-DD');
                 window.location.href = `/assignments/${dateString}`;
             }
-        });
-    }
-);
-Module('account-index',
-    () => {
-        return PAGE.startsWith('/account');
-    },
-    () => {
-        $('.course-button').each((index, element) => {
-            const courseName = $(element).data('course-name');
-            console.log(courseName);
-            $(element).click(() => {
-                if (confirm(`Are you sure you want to remove ${courseName}?`)) {
-                    $.post('/account/removecourse', { 'course-name': courseName }, (data) => {
-                        location.reload();
-                    });
-                }
-            });
         });
     }
 );
