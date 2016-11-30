@@ -172,6 +172,7 @@ Module('assignments-date',
                     updateDisplay(assignments);
 
                     $('#new-assignment-description').val('');
+                    $('#new-assignment-description').focus();
                 },
                 error: (jqXHR, textStatus, error) => {
                     alert('There was an error adding the assignment!');
@@ -185,6 +186,7 @@ Module('assignments-date',
         $('#new-assignment-description').keydown((e) => {
             if(e.keyCode == 13){
                 addAssignment();
+
             }
         });
 
