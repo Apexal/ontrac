@@ -3,7 +3,7 @@ extends /layout
 block content
     .row
         .col-xs-12
-            .page-header.center-sm(style='margin-bottom: 0')
+            .page-header.center-sm.date-header(style='margin-bottom: 0')
                 h1(id='date', style='margin-bottom: 0', data-date=date.format('YYYY-MM-DD'))= date.format('dddd, MMMM Do, YYYY')
                     small.right.text-muted.assignment-count 0 total
             .progress.assignment-progress-container(style="margin-top: 0;", data-toggle="tooltip", title="You are 0% done with your homework!")

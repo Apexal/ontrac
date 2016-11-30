@@ -1,3 +1,10 @@
+#date {
+}
+
+.date-header {
+    margin-top: 0;
+}
+
 .add-assignment-form input {
     width: 60%;
 }

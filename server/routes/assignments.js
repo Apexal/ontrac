@@ -2,6 +2,25 @@ var express = require('express');
 var router = express.Router();
 var moment = require('moment');
 
+/* Tries to find next assignment day */
+function getClosest(req, cb) {
+    req.db.Assignment.findOne({ userEmail: req.user.email, dueDate: { $gt: moment().startOf('day').toDate() }})
+        .exec()
+        .then((assignment) => {
+            if (assignment) {
+                // Only care about date
+                return cb(assignment.dueDate);
+            } else {
+                return null;
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            req.flash('error', 'There was an error finding the closest work day.');
+            return cb();
+        });
+}
+
 /* This entire route can only be used by logged in users. */
 router.use(requireLogin);
 
@@ -17,7 +36,13 @@ router.get('/today', (req, res, next) => {
 
 /* Attempts to find the next day (within reasonable span) where work is due. */
 router.get('/closest', (req, res) => {
-
+    getClosest(req, (date) => {
+        if (date) {
+            res.redirect('/assignments/' + moment(date).format('YYYY-MM-DD'));
+        } else {
+            res.redirect('/assignments');
+        }
+    });
 });
 
 router.get('/:date', (req, res, next) => {
