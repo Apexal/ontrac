@@ -11,16 +11,16 @@ block content
     .row
         .col-xs-12
             .black-bar.clearfix
-                .btn-group.right.hidden-xs
-                    button.btn.btn-default.active(id='list-view') List View
-                    button.btn.btn-default(id='planner-view') Planner View
+                .btn-group.right
+                    button.btn.btn-default.active(id='list-view', title='List View')
+                        i.fa.fa-list
+                    button.btn.btn-default(id='planner-view', title='Planner View')
+                        i.fa.fa-calendar
                 .btn-group.left
                     a.btn.btn-default(title=previousDay.format('dddd, MMM Do'), href='/assignments/' + previousDay.format('YYYY-MM-DD'), id='goto-previous-day')
-                        span.hidden-xs Previous Day
-                        i.visible-xs.fa.fa-arrow-left 
+                        i.fa.fa-arrow-left
                     a.btn.btn-default(title=nextDay.format('dddd, MMM Do'), href='/assignments/' + nextDay.format('YYYY-MM-DD'), id='goto-next-day')
-                        span.hidden-xs Next Day
-                        i.visible-xs.fa.fa-arrow-right 
+                        i.fa.fa-arrow-right
                     if !isClosest
                         a.btn.btn-default(href='/assignments/closest', id='goto-closest')
                             span.hidden-xs Closest
@@ -46,5 +46,5 @@ block content
         .col-xs-12
             hr
             a.btn.btn-danger.right.export-assignments(href='/api/assignments/' + date.format('YYYY-MM-DD'), title='Right click and choose \'Save Link As\'!') Export
-            button.btn.btn-default.refresh-assignments Reload   
+            button.btn.btn-default.refresh-assignments Reload &nbsp;
                 i.fa.fa-refresh

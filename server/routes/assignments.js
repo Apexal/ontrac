@@ -10,10 +10,12 @@ router.get('/', (req, res, next) => {
     res.render('assignments/index');
 });
 
+/* Redirects to today's assignment page. */
 router.get('/today', (req, res, next) => {
     res.redirect(`/assignments/${moment().format('YYYY-MM-DD')}`);
 });
 
+/* Attempts to find the next day (within reasonable span) where work is due. */
 router.get('/closest', (req, res) => {
 
 });
