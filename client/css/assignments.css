@@ -36,3 +36,10 @@
     padding-top: 10px;
     color: white;
 }
+
+.goto-date {
+    width: 90px;
+    display: inline;
+    padding-left: 8px;
+    padding-right: 8px;
+}

@@ -14,6 +14,10 @@ router.get('/today', (req, res, next) => {
     res.redirect(`/assignments/${moment().format('YYYY-MM-DD')}`);
 });
 
+router.get('/closest', (req, res) => {
+
+});
+
 router.get('/:date', (req, res, next) => {
     var dateString = res.locals.dateString = req.params.date;
     res.locals.date = false;
@@ -31,7 +35,6 @@ router.get('/:date', (req, res, next) => {
     res.locals.previousDay = moment(date).subtract(1, 'days');
     res.locals.nextDay = moment(date).add(1, 'days');
     
-
     res.render('assignments/date');
 });
 

@@ -53,6 +53,22 @@ Module('assignments-date',
         const container = $('.assignments-container');
         const status = $('.assignments-status');
         const progressBar = $('.assignment-progress-bar');
+        const datePicker = $('.goto-date');
+
+        $.datepicker._gotoToday = function (id) { $(id).datepicker('setDate', new Date()).datepicker('hide').blur(); window.location.href = '/assignments/' + moment().format('YYYY-MM-DD'); };
+
+        datePicker.datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: moment().subtract('3', 'months').toDate(),
+            maxDate: moment().add('6', 'months').toDate(),
+            onSelect: function() {
+                const dateString = $(this).val();
+                if (moment(dateString, 'YYYY-MM-DD', true).isValid()) {
+                    window.location.href = '/assignments/' + dateString;
+                }
+            },
+            showButtonPanel: true
+        });
 
         let assignments = [];
         function updateAssignments(cb) {
@@ -134,20 +150,22 @@ Module('assignments-date',
                     const descriptionSpan = $('<span>', {
                         class: 'assignment-description'
                     });
-                    descriptionSpan.text(i.description);
+                    descriptionSpan.text(i.description + ' ');
                     item.append(descriptionSpan);
 
                     // Remove button for non-phones
                     const removeButtonPC = $('<i>', {
-                        class: 'fa fa-close remove-assignment hidden-xs hidden-sm hidden-md hidden-lg pc'
+                        class: 'fa fa-close remove-assignment hidden-xs hidden-sm hidden-md hidden-lg pc',
+                        title: 'Remove this assignment.'
                     });
 
                     const removeButtonMobile = $('<i>', {
-                        class: 'fa fa-close remove-assignment visible-xs hidden-sm hidden-md hidden-lg mobile'
+                        class: 'fa fa-close remove-assignment visible-xs hidden-sm hidden-md hidden-lg mobile',
+                        title: 'Remove this assignment.'
                     });
 
-                    item.append(removeButtonPC);
                     item.append(removeButtonMobile);
+                    item.append(removeButtonPC);
                     list.append(item);
                 });
                 div.append(list);
@@ -287,7 +305,10 @@ Module('assignments-index',
     () => {
         $('.calendar').fullCalendar({
             weekends: false,
-            
+            dayClick: function(date, jsEvent, view) {
+                var dateString = date.format('YYYY-MM-DD');
+                window.location.href = `/assignments/${dateString}`;
+            }
         });
     }
 );
