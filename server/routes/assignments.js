@@ -58,11 +58,20 @@ router.get('/:date', (req, res, next) => {
     var date = res.locals.date = moment(dateString, 'YYYY-MM-DD', true);
     res.locals.pageTitle = date.format('dddd, MMM Do YY');
     res.locals.items = false;
-
+    
     // Get prev/next daysa
     res.locals.previousDay = moment(date).subtract(1, 'days');
     res.locals.nextDay = moment(date).add(1, 'days');
     
+    // Get schedule if possible
+    if (req.user.school) {
+        const schoolMod = require('../modules/schools/' + req.user.school.name.toLowerCase());
+        const schedule = schoolMod.getDaySchedule(req.user.schedule, date);
+        if (schedule.length > 0) {
+            res.locals.dateSchedule = schedule;
+        }
+    }
+
     res.render('assignments/date');
 });
 

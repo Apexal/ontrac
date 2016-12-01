@@ -56,3 +56,11 @@
     padding-left: 8px;
     padding-right: 8px;
 }
+
+#dateSchedule {
+    margin-bottom: 0;
+}
+
+#dateSchedule td {
+    text-align: center;
+}

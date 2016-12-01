@@ -41,9 +41,22 @@ block content
         br.hidden-xs
         h3.text-center.text-muted.assignments-status Loading assignments...
         .assignments-container
+    
+    if dateSchedule
+        .row
+            .col-xs-12
+                br
+                table.table#dateSchedule
+                    caption.text-center
+                        b This Day's Schedule
+                        span  (size not to scale)
+                    tbody
+                        tr
+                            each period in dateSchedule
+                                td(data-toggle='tooltip', class=(period.shortTitle == 'Free' ? 'active' : ''), data-length=period.duration, title=moment(period.startTime, 'hh:mm A').format('h:mm A') + ' to ' + moment(period.endTime, 'hh:mm A').format('h:mm A'))= period.shortTitle
     .row
         .col-xs-12
-            hr
+            hr(style='margin-top: 0px;')
             a.btn.btn-danger.right.export-assignments(onClick='alert("Right click and choose \'Save Link As\' (or mobile equvalient) to download this day\'s assignments!"); return false;', data-toggle='tooltip', href='/api/assignments/' + date.format('YYYY-MM-DD'), title='Right click and choose \'Save Link As\'!') Export
             button.btn.btn-default.refresh-assignments(data-toggle='tooltip', title='Resyncs the assignment list.') Reload &nbsp;
                 i.fa.fa-refresh

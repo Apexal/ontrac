@@ -1,4 +1,5 @@
 const regis = require('rhs-schedulejs'); // Who made this lovely package? 
+const moment = require('moment');
 
 function parseSchedule(content) {
     const parse = regis(content)
@@ -32,9 +33,19 @@ function getCoursesFromSchedule(scheduleObject) {
     return courses.sort((a,b) => { return a.title > b.title });
 }
 
-
+/* Returns an array of the user's classes on a certain date. */
+function getDaySchedule(scheduleObject, date) {
+    // Luckily this is easy for Regis
+    const d = moment(date).startOf('day').toDate();
+    if (d in scheduleObject.scheduleDays) {
+        return scheduleObject.classDays[scheduleObject.scheduleDays[d]];
+    } else {
+        return [];
+    }
+}
 
 module.exports = {
     parseSchedule: parseSchedule,
-    getCoursesFromSchedule: getCoursesFromSchedule
+    getCoursesFromSchedule: getCoursesFromSchedule,
+    getDaySchedule: getDaySchedule
 };
