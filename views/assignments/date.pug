@@ -46,14 +46,17 @@ block content
         .row
             .col-xs-12
                 br
-                table.table#dateSchedule
+                table.table.table-condensed#dateSchedule
                     caption.text-center
                         b This Day's Schedule
                         span  (size not to scale)
                     tbody
-                        tr
+                        tr.hidden-xs
                             each period in dateSchedule
                                 td(data-toggle='tooltip', class=(period.shortTitle == 'Free' ? 'active' : ''), data-length=period.duration, title=moment(period.startTime, 'hh:mm A').format('h:mm A') + ' to ' + moment(period.endTime, 'hh:mm A').format('h:mm A'))= period.shortTitle
+                        each period in dateSchedule
+                            tr.visible-xs(class=(period.shortTitle == 'Free' ? 'active' : ''))
+                                td(data-toggle='tooltip', data-length=period.duration, title=moment(period.startTime, 'hh:mm A').format('h:mm A') + ' to ' + moment(period.endTime, 'hh:mm A').format('h:mm A'))= period.shortTitle
     .row
         .col-xs-12
             hr(style='margin-top: 0px;')
