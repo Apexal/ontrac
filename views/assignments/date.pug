@@ -37,7 +37,7 @@ block content
                     select.form-control.full-width-sm#new-assignment-course-name(style='width: 30%', name='course-name')
                         each c in user.courses
                             option(value=c.title)= c.shortTitle
-                        option(value='Other') Other    
+                        option(value='Other') Other
                     button.btn.btn-primary.full-width-sm.add-assignment(style='width: 10%', type='button') Add
     .row
         br.hidden-xs
