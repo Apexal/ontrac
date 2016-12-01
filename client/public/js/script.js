@@ -291,6 +291,24 @@ Module('assignments-date',
             });
         }
 
+        let showForm = (sessionStorage['showAssignmentAddForm'] ? Number(sessionStorage['showAssignmentAddForm']) : 0);
+        if(showForm == 0){
+            $('.add-assignment-form').addClass('hidden-xs');
+        }
+        /* Toggle edit assignments */
+        $('#edit-assignments').click(() => {
+            if (showForm == 0){
+                showForm = 1;
+                $('.add-assignment-form').removeClass('hidden-xs');
+                $(this).addClass('active');
+            } else {
+                showForm = 0;
+                $('.add-assignment-form').addClass('hidden-xs');
+                $(this).removeClass('active');
+            }
+            sessionStorage['showAssignmentAddForm'] = showForm;
+        });
+
         /* When the assignments are re-rendered it removes all the previous event handlers so they must be added back */
         function updateEventHandlers() {
             $('.assignment-description').off().click(toggleAssignment);
