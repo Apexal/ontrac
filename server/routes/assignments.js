@@ -5,6 +5,7 @@ var moment = require('moment');
 /* Tries to find next assignment day */
 function getClosest(req, cb) {
     req.db.Assignment.findOne({ userEmail: req.user.email, dueDate: { $gt: moment().startOf('day').toDate() }})
+        .sort('dueDate') // Ensure it is the closest day and not the day that was last edited
         .exec()
         .then((assignment) => {
             if (assignment) {
