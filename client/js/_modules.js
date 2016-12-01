@@ -12,6 +12,11 @@ function Module(name, check, body) {
     });
 }
 
+function updateTooltips(){
+  $('[data-toggle="tooltip"]').tooltip({ animation: true, html: true });
+  $('[data-toggle="popover"]').popover({ html: true });
+}
+
 $(() => {
     modules.sort(function(a, b) {
         if (a.name < b.name)
@@ -24,4 +29,6 @@ $(() => {
         console.log(module.name);
         module.run();
     });
+
+    updateTooltips();
 });

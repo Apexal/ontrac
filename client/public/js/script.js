@@ -12,6 +12,11 @@ function Module(name, check, body) {
     });
 }
 
+function updateTooltips(){
+  $('[data-toggle="tooltip"]').tooltip({ animation: true, html: true });
+  $('[data-toggle="popover"]').popover({ html: true });
+}
+
 $(() => {
     modules.sort(function(a, b) {
         if (a.name < b.name)
@@ -24,6 +29,8 @@ $(() => {
         console.log(module.name);
         module.run();
     });
+
+    updateTooltips();
 });
 Module('account-index',
     () => {
@@ -130,8 +137,15 @@ Module('assignments-date',
                     class: 'course-list col-xs-12 col-sm-6 col-md-4',
                     'data-course-name': courseName
                 });
+
+                let done = 0;
+                items.forEach((i) => { if (i.completed) done++; });
+
+                const titleText = `${done} out of ${items.length} completed`;
                 const title = $('<h3>', {
-                    class: 'course-name'
+                    class: 'course-name',
+                    'data-toggle': 'tooltip',
+                    title: titleText
                 });
                 title.text(courseName);
                 
@@ -296,6 +310,7 @@ Module('assignments-date',
                     removeIcon.addClass('hidden-sm hidden-md hidden-lg');
                 });
             });
+            updateTooltips();
         }
         updateEventHandlers();
     }
