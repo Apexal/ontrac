@@ -11,16 +11,19 @@ const recursiveReadSync = require('recursive-readdir-sync');
 const session = require('express-session');
 const config = require('./config/config.json');
 const moment = require('moment');
+const env = process.env.NODE_ENV || 'development';
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const mongodb = require('./server/modules/mongodb.js');
 
+const callbackURL = `http://${config[env].ip}:${config[env].port}/auth/google/callback`;
+console.log(callbackURL);
 passport.use(new GoogleStrategy({
         clientID: config.auth.google_client_id,
         clientSecret: config.auth.google_client_secret,
-        callbackURL: 'http://localhost:3000/auth/google/callback'
+        callbackURL: callbackURL
     },
     function(accessToken, refreshToken, profile, cb) {
         const email = profile.emails[0].value;
