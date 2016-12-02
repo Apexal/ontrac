@@ -53,6 +53,53 @@ router.use(function(req, res, next) {
     next();
 });
 
+/* Returns JSON array of objects for FullCalendar */
+router.get('/events', (req, res) => {
+    const startDateString = req.query.start;
+    const endDateString = req.query.end;
+    if(!startDateString || !endDateString || !moment(startDateString, 'YYYY-MM-DD', true).isValid() || !moment(endDateString, 'YYYY-MM-DD', true).isValid())
+        return res.json({ err: 'Invalid start date or end date.' });
+
+    const start = moment(startDateString, 'YYYY-MM-DD', true);
+    const end = moment(endDateString, 'YYYY-MM-DD', true);
+    req.db.Assignment.find({ userEmail: req.user.email, dueDate: { '$gte': start.toDate(), '$lt': end.toDate() } })
+        .lean()
+        .exec()
+        .then((items) => {
+            let events = [];
+            let days = {};
+
+            items.forEach((i) => {
+                if(!days[i.dueDate]) days[i.dueDate] = [];
+                days[i.dueDate].push(i);    
+            });
+
+            for(let date in days) {
+                const dayItems = days[date];
+                const total = dayItems.length;
+                let doneCount = 0;
+
+                dayItems.forEach((i) => { if (i.completed) doneCount++; }); // Get # of completed assignments
+                const percentDone = Math.round((doneCount / total) * 100);
+
+                let color = 'green';
+                if (percentDone < 66) color = 'blue'; if (percentDone < 33) color = 'red';
+
+                events.push({
+                    title: `<b class='assignment-calendar-event'>${total} assignments ${percentDone !== 100 ? `<span class='right'>${percentDone}% done</span>` : ''}</b>`,
+                    start: moment(date).format('YYYY-MM-DD'),
+                    color: color,
+                    url: `/assignments/${moment(date).format('YYYY-MM-DD')}`
+                });
+            }
+
+            res.json(events);
+        })
+        .catch((err) => {
+            return res.json({ err: err });
+        });
+});
+
 router.get('/one/:id', (req, res) => {
     const assignmentId = req.params.id;
     req.db.Assignment.findOne({ userEmail: req.user.email, _id: assignmentId })

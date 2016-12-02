@@ -64,3 +64,12 @@
 #dateSchedule td {
     text-align: center;
 }
+
+.fc-event {
+    text-decoration: none !important;
+}
+
+#goto-previous-day, #goto-next-day {
+    padding-right: 10px;
+    padding-left: 10px;
+}

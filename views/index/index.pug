@@ -5,11 +5,12 @@ mixin barLink(link)
 
 block content
   .row
-    .jumbotron
-      h1 Good #{helpers.getGreetingTime(moment())}, #[span(style='font-size: 80%;')= user.name.nickname]
-      
-      b Quote of the Day
-      p asdasdasd
+    .col-xs-12
+      .jumbotron
+        h1 Good #{helpers.getGreetingTime(moment())}, #[span(style='font-size: 80%;')= user.name.nickname]
+        
+        b Quote of the Day
+        p asdasdasd
   .row.center
     .full-width(style="background-color: #222")
       for link in user.school.links

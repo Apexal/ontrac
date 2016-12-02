@@ -8,7 +8,11 @@ Module('assignments-index',
             dayClick: function(date, jsEvent, view) {
                 var dateString = date.format('YYYY-MM-DD');
                 window.location.href = `/assignments/${dateString}`;
-            }
+            },
+            eventRender: function(event, element) {
+                element.html(event.title);
+            },
+            eventSources: ['/api/assignments/events']
         });
     }
 );
