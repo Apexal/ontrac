@@ -281,8 +281,16 @@ Module('assignments-date',
         updateEventHandlers();
 
 
-
-
+        /* Clicking on a schedule item will change the course name select. */
+        const courseSelect = $('#new-assignment-course-name option');
+        const courses = $.map(courseSelect, function(option) {
+            return option.value;
+        });
+        $('#dateSchedule td').click(function() {
+            const courseName = $(this).data('long-title');
+            if (courses.indexOf(courseName) != -1)
+                $('#new-assignment-course-name').val(courseName).change();
+        });
 
 
         /* ANIMATE THE PC SCHEDULE ROW INTO SCALE BASED ON PERIOD DURATION */
