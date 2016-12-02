@@ -279,5 +279,24 @@ Module('assignments-date',
             updateTooltips();
         }
         updateEventHandlers();
+
+
+
+
+
+
+        /* ANIMATE THE PC SCHEDULE ROW INTO SCALE BASED ON PERIOD DURATION */
+        // I actually cannot believe this works... 
+        let scheduleDuration = 0;
+        $('#dateSchedule tr.hidden-xs td').each(function() {
+            const duration = parseInt($(this).data('length'));
+            scheduleDuration += duration;
+            //alert($(this).text());
+        });
+
+        $('#dateSchedule tr.hidden-xs td').each(function() {
+            const percentSize = (parseInt($(this).data('length')) / scheduleDuration) * 100;
+            $(this).animate({ width: percentSize+'%' }, 1000);
+        });
     }
 );
