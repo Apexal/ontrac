@@ -69,7 +69,16 @@
     text-decoration: none !important;
 }
 
-#goto-previous-day, #goto-next-day, #goto-closest {
+#goto-previous-day, #goto-next-day, #goto-closest, #edit-assignments {
     padding-right: 10px;
     padding-left: 10px;
+}
+#assignments-view, #test-view {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.work-view-buttons span.badge{
+    margin-left: 10px;
+    display: none;
 }

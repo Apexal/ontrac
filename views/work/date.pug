@@ -4,45 +4,35 @@ block content
     .row
         .col-xs-12
             .page-header.center-sm.date-header(style='margin-bottom: 0')
-                h1#date(data-toggle='tooltip', title=moment(date).startOf('day').from(moment().startOf('day')), style='margin-bottom: 0', data-date=date.format('YYYY-MM-DD'))= date.format('dddd, MMMM Do, YYYY')
-                    small.right.text-muted.assignment-count 0 total
-            .progress.assignment-progress-container(style="margin-top: 0;", data-toggle='tooltip', title='You are 0% done with your homework!')
+                h1#date(data-toggle='tooltip', title=moment(date).startOf('day').from(moment().startOf('day')), style='margin-bottom: 0', data-date=date.format('YYYY-MM-DD'))
+                    b.work-view-status Assignments Due 
+                    span= date.format('dddd, MMMM Do, YYYY')
+            .progress.assignment-progress-container(style="margin-top: 0;")
                 .progress-bar.assignment-progress-bar(role="progressbar", style="width: 0%;")
     .row
         .col-xs-12
             .black-bar.clearfix
-                .btn-group.right
+                .btn-group.right.work-view-buttons
                     button.btn.btn-default.visible-xs#edit-assignments(data-toggle='tooltip', title='Toggle editing assignments.')
                         i.fa.fa-pencil
-                    button.btn.btn-default.active#list-view(data-toggle='tooltip', title='List View')
+                    a.btn.btn-default.active#assignments-view(data-view='assignments', href='#assignments', data-toggle='tooltip', title='Show assignments.')
                         i.fa.fa-list
-                    button.btn.btn-default#planner-view(data-toggle='tooltip', title='Planner View')
+                        span.badge 0
+                    a.btn.btn-default#tests-view(data-view='tests', href='#tests', data-toggle='tooltip', title='Show tests/quizzes.')
                         i.fa.fa-calendar
+                        span.badge 0
                 .btn-group.left
-                    a.btn.btn-default#goto-previous-day(data-toggle='tooltip', title=previousDay.format('dddd, MMM Do'), href='/assignments/' + previousDay.format('YYYY-MM-DD'))
+                    a.btn.btn-default#goto-previous-day(data-toggle='tooltip', title=previousDay.format('dddd, MMM Do'), href='/work/' + previousDay.format('YYYY-MM-DD'))
                         i.fa.fa-arrow-left
-                    a.btn.btn-default#goto-next-day(data-toggle='tooltip', title=nextDay.format('dddd, MMM Do'), href='/assignments/' + nextDay.format('YYYY-MM-DD'))
+                    a.btn.btn-default#goto-next-day(data-toggle='tooltip', title=nextDay.format('dddd, MMM Do'), href='/work/' + nextDay.format('YYYY-MM-DD'))
                         i.fa.fa-arrow-right
                     if !isClosest
-                        a.btn.btn-default#goto-closest(data-toggle='tooltip', href='/assignments/closest', title='See the work due next.')
+                        a.btn.btn-default#goto-closest(data-toggle='tooltip', href='/work/closest', title='See the work due next.')
                             b Due
                     input.goto-date.form-control(data-toggle='tooltip', type='text', title='Go to a specific date.', value=date.format('YYYY-MM-DD'))
                 .statistics.hidden-xs
                     span 0% completed
-    .row
-        .col-xs-12
-            .form-inline.add-assignment-form.full-width
-                .form-group.full-width
-                    input.form-control.full-width-sm#new-assignment-description(style='width: 60%', type='text', name='description', placeholder='New Assignment', required)
-                    select.form-control.full-width-sm#new-assignment-course-name(style='width: 30%', name='course-name')
-                        each c in user.courses
-                            option(value=c.title)= c.shortTitle
-                        option(value='Other') Other
-                    button.btn.btn-primary.full-width-sm.add-assignment(style='width: 10%', type='button') Add
-    .row
-        br.hidden-xs
-        h3.text-center.text-muted.assignments-status Loading assignments...
-        .assignments-container
+    include assignments
     
     if dateSchedule
         .row

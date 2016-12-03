@@ -89,7 +89,7 @@ router.get('/events', (req, res) => {
                     title: `<b class='assignment-calendar-event'>${total} assignments ${percentDone !== 100 ? `<span class='right'>${percentDone}% done</span>` : ''}</b>`,
                     start: moment(date).format('YYYY-MM-DD'),
                     color: color,
-                    url: `/assignments/${moment(date).format('YYYY-MM-DD')}`
+                    url: `/work/${moment(date).format('YYYY-MM-DD')}`
                 });
             }
 

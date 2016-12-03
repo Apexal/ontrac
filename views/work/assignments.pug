@@ -1,0 +1,15 @@
+#assignments
+    .row
+        .col-xs-12
+            .form-inline.add-assignment-form.full-width
+                .form-group.full-width
+                    input.form-control.full-width-sm#new-assignment-description(style='width: 60%', type='text', name='description', placeholder='New Assignment', required)
+                    select.form-control.full-width-sm#new-assignment-course-name(style='width: 30%', name='course-name')
+                        each c in user.courses
+                            option(value=c.title)= c.shortTitle
+                        option(value='Other') Other
+                    button.btn.btn-primary.full-width-sm.add-assignment(style='width: 10%', type='button') Add
+    .row
+        br.hidden-xs
+        h3.text-center.text-muted.assignments-status Loading assignments...
+        .assignments-container

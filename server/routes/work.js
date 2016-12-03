@@ -12,7 +12,7 @@ function getClosest(req, cb) {
                 // Only care about date
                 return cb(assignment.dueDate);
             } else {
-                return null;
+                return cb(null);
             }
         })
         .catch((err) => {
@@ -27,21 +27,21 @@ router.use(requireLogin);
 
 router.get('/', (req, res, next) => {
     res.locals.pageTitle = 'Assignments';
-    res.render('assignments/index');
+    res.render('work/index');
 });
 
 /* Redirects to today's assignment page. */
 router.get('/today', (req, res, next) => {
-    res.redirect(`/assignments/${moment().format('YYYY-MM-DD')}`);
+    res.redirect(`/work/${moment().format('YYYY-MM-DD')}`);
 });
 
 /* Attempts to find the next day (within reasonable span) where work is due. */
 router.get('/closest', (req, res) => {
     getClosest(req, (date) => {
         if (date) {
-            res.redirect('/assignments/' + moment(date).format('YYYY-MM-DD'));
+            res.redirect('/work/' + moment(date).format('YYYY-MM-DD'));
         } else {
-            res.redirect('/assignments');
+            res.redirect('/work');
         }
     });
 });
@@ -72,7 +72,7 @@ router.get('/:date', (req, res, next) => {
         }
     }
 
-    res.render('assignments/date');
+    res.render('work/date');
 });
 
 module.exports = router;

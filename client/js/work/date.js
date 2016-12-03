@@ -1,16 +1,38 @@
 /* MODULE FOR SPECIFC ASSIGNMENT DAY PAGE */
-Module('assignments-date',
+Module('work-date',
     () => {
-        return PAGE.startsWith('/assignments/');
+        return PAGE.startsWith('/work/');
     },
-    () => {
+    () => { 
+        const view = 'assignments';
+        const viewStatus = $('.work-view-status');
+
+        function changeView(newView) {
+            $('#assignments-view, #tests-view').removeClass('active');
+            if (newView == 'assignments') {
+                $('#assignments-view').addClass('active');
+                viewStatus.text('Assignments Due ');
+            } else if (newView == 'tests') {
+                $('#tests-view').addClass('active');
+                viewStatus.text('Tests/Quizzes on ');
+            } else {
+                changeView('assignments');
+            }
+        }
+
+        $('#assignments-view, #tests-view').click(function() {
+            const newView = $(this).data('view');
+            changeView(newView);
+        });
+        // --------------------------------------------------------------
+        
         const date = $('#date').data('date');
         const container = $('.assignments-container');
         const status = $('.assignments-status');
         const progressBar = $('.assignment-progress-bar');
         const datePicker = $('.goto-date');
 
-        $.datepicker._gotoToday = function (id) { $(id).datepicker('setDate', new Date()).datepicker('hide').blur(); window.location.href = '/assignments/' + moment().format('YYYY-MM-DD'); };
+        $.datepicker._gotoToday = function (id) { $(id).datepicker('setDate', new Date()).datepicker('hide').blur(); window.location.href = '/work/' + moment().format('YYYY-MM-DD'); };
 
         datePicker.datepicker({
             dateFormat: 'yy-mm-dd',
@@ -19,7 +41,7 @@ Module('assignments-date',
             onSelect: function() {
                 const dateString = $(this).val();
                 if (moment(dateString, 'YYYY-MM-DD', true).isValid()) {
-                    window.location.href = '/assignments/' + dateString;
+                    window.location.href = '/work/' + dateString;
                 }
             },
             showButtonPanel: true
@@ -58,7 +80,6 @@ Module('assignments-date',
                 container.empty();
                 status.show();
                 status.text('There are no assignments due this day.');
-                $('.assignment-count').text('0 total');
                 $('.export-assignments').hide();
                 progressBar.animate({ width: '0%' }, 500);
                 progressBar.removeClass('full');
@@ -68,12 +89,14 @@ Module('assignments-date',
 
                 return;
             }
+            
+            $('#assignments-view span.badge').text(assignments.length);
+            $('#assignments-view span.badge').show();
             status.hide();
             $('.export-assignments').show();
             
             // For statistics
             let total = assignments.length;
-            $('.assignment-count').text(total + ' total');
             let completed = 0;
 
             assignments = organizeAssignments(assignments);
@@ -144,7 +167,7 @@ Module('assignments-date',
                 progressBar.addClass('low');
             }
             progressBar.attr('title', `You are ${percentDone}% done with your assignments!`);
-            $('.statistics span').text(`${percentDone}% completed` + (( percentDone != 0 && percentDone != 100) ? ` (${completed} out of ${total})` : ''));
+            $('.statistics span').text(`${percentDone}% completed`);
 
             updateEventHandlers();
         }
@@ -280,7 +303,6 @@ Module('assignments-date',
         }
         updateEventHandlers();
 
-
         /* Clicking on a schedule item will change the course name select. */
         const courseSelect = $('#new-assignment-course-name option');
         const courses = $.map(courseSelect, function(option) {
@@ -292,14 +314,12 @@ Module('assignments-date',
                 $('#new-assignment-course-name').val(courseName).change();
         });
 
-
         /* ANIMATE THE PC SCHEDULE ROW INTO SCALE BASED ON PERIOD DURATION */
         // I actually cannot believe this works... 
         let scheduleDuration = 0;
         $('#dateSchedule tr.hidden-xs td').each(function() {
             const duration = parseInt($(this).data('length'));
             scheduleDuration += duration;
-            //alert($(this).text());
         });
 
         $('#dateSchedule tr.hidden-xs td').each(function() {
