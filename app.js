@@ -104,6 +104,11 @@ app.use(express.static(path.join(__dirname, 'client/public')));
 /* Middle-ware? to require login on certain routes, it uses the session to remember where the user wanted to go. */
 requireLogin = function(req, res, next) {
     if (!req.isAuthenticated()) {
+        if (req.originalUrl.startsWith('/api/')) {
+            res.status(401);
+            res.json({ err: 'Not authorized.' });
+            return;
+        }
         req.session.redirect = req.originalUrl;
         console.log(req.originalUrl);
         res.redirect('/auth/google');
@@ -119,6 +124,9 @@ for (var h in helpers) {
         app.locals.helpers[h] = helpers[h];
     }
 }
+
+/* Entire API route requires authentication. */
+app.all('/api/*', requireLogin); // TODO: or api key
 
 // ALL REQUESTS PASS THROUGH HERE FIRST
 app.locals.defaultTitle = 'OnTrac';

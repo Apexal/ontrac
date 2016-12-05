@@ -35,9 +35,6 @@ function assignmentToXML(a) {
     }).end({pretty: true});
 }
 
-/* This entire route can only be used by logged in users. */
-router.use(requireLogin); // TODO: or api key
-
 /* This decides whether to return XML or JSON depending on the request */
 router.use(function(req, res, next) {
     res.format = 'json';
