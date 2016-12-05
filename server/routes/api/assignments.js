@@ -16,7 +16,7 @@ function assignmentsToXML(assignments) {
             completed: a.completed
         }, a.description);
     });
-    data = data.end({pretty: true});
+    data = data.end({ pretty: true });
     return data;
 }
 
@@ -24,7 +24,7 @@ function assignmentToXML(a) {
     return xmlbuilder.create({
         assignment: {
             '@id': a._id,
-            '@dueDate': a.dueDate,
+            '@dueDate': a.dueDate.toString(),
             '@userEmail': a.userEmail,
             '@priority': a.priority,
             '@courseName': a.courseName,
@@ -32,7 +32,7 @@ function assignmentToXML(a) {
             '@completed': a.completed,
             '#text': a.description,
         }
-    }).end({pretty: true});
+    }).end({ pretty: true });
 }
 
 /* This decides whether to return XML or JSON depending on the request */
