@@ -72,7 +72,7 @@ Module('work-date',
             })
 
             return data;
-        } 
+        }
 
         /* Takes the assignments array, organizes it, and then creates a display for it */
         function updateDisplay(assignments) {
@@ -280,6 +280,11 @@ Module('work-date',
             sessionStorage['showAssignmentAddForm'] = showForm;
         });
 
+        const courseSelect = $('#new-assignment-course-name option');
+        const courses = $.map(courseSelect, function(option) {
+            return option.value;
+        });
+
         /* When the assignments are re-rendered it removes all the previous event handlers so they must be added back */
         function updateEventHandlers() {
             $('.assignment-description').off().click(toggleAssignment);
@@ -299,15 +304,17 @@ Module('work-date',
                     removeIcon.addClass('hidden-sm hidden-md hidden-lg');
                 });
             });
+
+            $('h3.course-name').click(function() {
+                const courseName = $(this).parent().data('course-name');
+                if (courses.indexOf(courseName) != -1)
+                    $('#new-assignment-course-name').val(courseName).change();
+            });
             updateTooltips();
         }
         updateEventHandlers();
 
         /* Clicking on a schedule item will change the course name select. */
-        const courseSelect = $('#new-assignment-course-name option');
-        const courses = $.map(courseSelect, function(option) {
-            return option.value;
-        });
         $('#dateSchedule td').click(function() {
             const courseName = $(this).data('long-title');
             if (courses.indexOf(courseName) != -1)
