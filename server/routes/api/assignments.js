@@ -35,21 +35,6 @@ function assignmentToXML(a) {
     }).end({ pretty: true });
 }
 
-/* This decides whether to return XML or JSON depending on the request */
-router.use(function(req, res, next) {
-    res.format = 'json';
-    if (req.accepts('json') || req.accepts('text/html')) {
-        res.header('Content-Type', 'application/json');
-    } else if (req.accepts('application/xml')) {
-        res.header('Content-Type', 'text/xml');
-        res.format = 'xml';
-    } else {
-        return res.send(406); // 406 Not Acceptable
-    }
-
-    next();
-});
-
 /* Returns JSON array of objects for FullCalendar */
 router.get('/events', (req, res) => {
     const startDateString = req.query.start;

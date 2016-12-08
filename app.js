@@ -54,7 +54,6 @@ passport.use(new GoogleStrategy({
 
                     user.save();
                 }
-
                 cb(null, user);
         })
         .catch((error) => {
@@ -125,8 +124,23 @@ for (var h in helpers) {
     }
 }
 
+const determineResponseType = (req, res, next) => {
+    res.format = 'json';
+    if (req.accepts('json') || req.accepts('text/html')) {
+        res.header('Content-Type', 'application/json');
+    } else if (req.accepts('application/xml')) {
+        res.header('Content-Type', 'text/xml');
+        res.format = 'xml';
+    } else {
+        return res.send(406); // 406 Not Acceptable
+    }
+
+    next();
+}
+
 /* Entire API route requires authentication. */
 app.all('/api/*', requireLogin); // TODO: or api key
+app.all('/api/*', determineResponseType);
 
 // ALL REQUESTS PASS THROUGH HERE FIRST
 app.locals.defaultTitle = 'OnTrac';
