@@ -18,7 +18,7 @@ block content
                     a.btn.btn-default.active#assignments-view(data-view='assignments', href='#assignments', data-toggle='tooltip', title='Show assignments.')
                         i.fa.fa-list
                         span.badge 0
-                    a.btn.btn-default#tests-view(data-view='tests', href='#tests', data-toggle='tooltip', title='Show tests/quizzes.')
+                    a.btn.btn-default#graded-items-view(data-view='gradedItems', href='#gradedItems', data-toggle='tooltip', title='Show tests/quizzes/projects.')
                         i.fa.fa-calendar
                         span.badge 0
                 .btn-group.left
@@ -32,8 +32,10 @@ block content
                     input.goto-date.form-control(data-toggle='tooltip', type='text', title='Go to a specific date.', value=date.format('YYYY-MM-DD'))
                 .statistics.hidden-xs
                     span 0% completed
-    include assignments
     
+    include assignments
+    include gradedItems
+
     if dateSchedule
         .row
             .col-xs-12
@@ -51,6 +53,6 @@ block content
     .row
         .col-xs-12
             hr(style='margin-top: 0px;')
-            a.btn.btn-danger.right.export-assignments(onClick='alert("Right click and choose \'Save Link As\' (or mobile equvalient) to download this day\'s assignments!"); return false;', data-toggle='tooltip', href='/api/assignments/' + date.format('YYYY-MM-DD'), title='Right click and choose \'Save Link As\'!') Export
-            button.btn.btn-default.refresh-assignments(data-toggle='tooltip', title='Resyncs the assignment list.') Reload &nbsp;
+            a.btn.btn-danger.right.export-assignments(onClick='alert("Right click and choose \'Save Link As\' (or mobile equvalient) to download this day\'s assignments/graded items!"); return false;', data-toggle='tooltip', href='/api/assignments/' + date.format('YYYY-MM-DD'), title='Right click and choose \'Save Link As\'!') Export
+            button.btn.btn-default.refresh-items(data-toggle='tooltip', title='Updates the list.') Reload &nbsp;
                 i.fa.fa-refresh

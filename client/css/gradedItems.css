@@ -1,0 +1,5 @@
+#graded-items { display: none; }
+
+.graded-item i.fa-link {
+    margin-right: 5px;
+}

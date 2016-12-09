@@ -12,7 +12,7 @@ Module('work-index',
             eventRender: function(event, element) {
                 element.html(event.title);
             },
-            eventSources: ['/api/assignments/events']
+            eventSources: ['/api/assignments/events', '/api/gradedItems/events']
         });
     }
 );

@@ -4,32 +4,41 @@ Module('work-date',
         return PAGE.startsWith('/work/');
     },
     () => { 
-        const view = 'assignments';
+        let view = 'assignments';
         const viewStatus = $('.work-view-status');
 
+        const originalPrevLink = $('#goto-previous-day').attr('href');
+        const originalNextLink = $('#goto-next-day').attr('href');
+
         function changeView(newView) {
-            $('#assignments-view, #tests-view').removeClass('active');
+            $('.work-view-buttons a').removeClass('active');
             if (newView == 'assignments') {
                 $('#assignments-view').addClass('active');
                 viewStatus.text('Assignments Due ');
-            } else if (newView == 'tests') {
-                $('#tests-view').addClass('active');
-                viewStatus.text('Tests/Quizzes on ');
+                $('#goto-previous-day').attr('href', `${originalPrevLink}#assignments`);
+                $('#goto-next-day').attr('href', `${originalNextLink}#assignments`);
+            } else if (newView == 'gradedItems') {
+                $('#graded-items-view').addClass('active');
+                viewStatus.text('Graded Assignments On ');
+                $('#goto-previous-day').attr('href', `${originalPrevLink}#gradedItems`);
+                $('#goto-next-day').attr('href', `${originalNextLink}#gradedItems`);
             } else {
                 changeView('assignments');
             }
+
+            view = newView;
+            updateDisplay();
+            updateEventHandlers();
         }
 
-        $('#assignments-view, #tests-view').click(function() {
+        $('.work-view-buttons a').click(function() {
             const newView = $(this).data('view');
             changeView(newView);
         });
+
         // --------------------------------------------------------------
         
         const date = $('#date').data('date');
-        const container = $('.assignments-container');
-        const status = $('.assignments-status');
-        const progressBar = $('.assignment-progress-bar');
         const datePicker = $('.goto-date');
 
         $.datepicker._gotoToday = function (id) { $(id).datepicker('setDate', new Date()).datepicker('hide').blur(); window.location.href = '/work/' + moment().format('YYYY-MM-DD'); };
@@ -47,7 +56,39 @@ Module('work-date',
             showButtonPanel: true
         });
 
+        // ---------------
         let assignments = [];
+        let gradedItems = [];
+        // ---------------
+
+        /* Displays either assignments or graded items. */
+        function updateDisplay() {
+            if (view == 'assignments') {
+                $('#graded-items').hide();
+
+                $('#assignments').show();
+                $('.assignment-progress-bar').show();
+                updateAssignments((a) => {
+                    assignments = a;
+                    displayAssignments(assignments);
+                });
+            } else if (view == 'gradedItems') {
+                $('#assignments').hide();
+                $('.assignment-progress-bar').hide();
+
+                $('#graded-items').show();
+                updateGradedItems((g) => {
+                    gradedItems = g;
+                    displayGradedItems(gradedItems);
+                });
+            }
+        }
+        
+        // ------------------------------- ASSIGNMENTS ------------------------
+        const assignmentsContainer = $('.assignments-container');
+        const assignmentsStatus = $('.assignments-status');
+        const progressBar = $('.assignment-progress-bar');
+
         function updateAssignments(cb) {
             $.getJSON('/api/assignments/' + date)
                 .done((ass) => {
@@ -57,6 +98,19 @@ Module('work-date',
                 .fail((jqxhr, textStatus, error) => {
                     console.log(error);
                     alert('There was an error loading the assignments.');
+                    return; // Does not reload the page as if the website crashses, reloading will lose the current data
+                });
+        }
+
+        function updateGradedItems(cb) {
+            $.getJSON('/api/gradedItems/' + date)
+                .done((gr) => {
+                    gradedItems = gr;
+                    cb(gr);
+                })
+                .fail((jqxhr, textStatus, error) => {
+                    console.log(error);
+                    alert('There was an error loading the graded items.');
                     return; // Does not reload the page as if the website crashses, reloading will lose the current data
                 });
         }
@@ -75,11 +129,11 @@ Module('work-date',
         }
 
         /* Takes the assignments array, organizes it, and then creates a display for it */
-        function updateDisplay(assignments) {
+        function displayAssignments(assignments) {
             if (assignments.length == 0) {
-                container.empty();
-                status.show();
-                status.text('There are no assignments due this day.');
+                assignmentsContainer.empty();
+                assignmentsStatus.show();
+                assignmentsStatus.text('There are no assignments due this day.');
                 $('.export-assignments').hide();
                 progressBar.animate({ width: '0%' }, 500);
                 progressBar.removeClass('full');
@@ -89,18 +143,18 @@ Module('work-date',
 
                 return;
             }
-            
+
             $('#assignments-view span.badge').text(assignments.length);
             $('#assignments-view span.badge').show();
-            status.hide();
+            assignmentsStatus.hide();
             $('.export-assignments').show();
-            
+
             // For statistics
             let total = assignments.length;
             let completed = 0;
 
             assignments = organizeAssignments(assignments);
-            container.empty();
+            assignmentsContainer.empty();
 
             for(let courseName in assignments) {
                 const items = assignments[courseName];
@@ -154,7 +208,7 @@ Module('work-date',
                     list.append(item);
                 });
                 div.append(list);
-                container.append(div);
+                assignmentsContainer.append(div);
             }
 
             const percentDone = Math.round(( completed / total ) * 100);
@@ -172,16 +226,8 @@ Module('work-date',
             updateEventHandlers();
         }
 
-        $('.refresh-assignments').click(function() {
-            updateAssignments((a) => {
-                assignments = a;
-                updateDisplay(assignments);
-            });
-        });
-
-        updateAssignments((a) => {
-            assignments = a;
-            updateDisplay(assignments);
+        $('.refresh-items').click(function() {
+            changeView(view);
         });
 
         /* ADD ASSIGNMENTS */
@@ -211,7 +257,7 @@ Module('work-date',
             });
         }
 
-        // Add assignment when button click or ENTER hit
+        /* Add assignment when button click or ENTER hit */
         $('.add-assignment').click(addAssignment);
         $('#new-assignment-description').keydown((e) => {
             if(e.keyCode == 13){
@@ -228,7 +274,7 @@ Module('work-date',
             $.post(`/api/assignments/one/${assignmentId}`, { assignmentId: assignmentId, completed: newCompleted })
                 .done((data) => {
                     for(let i in assignments) { if (assignments[i]._id == assignmentId) assignments[i] = data; }
-                    updateDisplay(assignments);
+                    displayAssignments(assignments);
                 })
                 .fail((err) => {
                     alert('There was an error!');
@@ -280,6 +326,89 @@ Module('work-date',
             sessionStorage['showAssignmentAddForm'] = showForm;
         });
 
+
+        // ------------------------------------ GRADED ITEMS -----------------------------------------------
+        const gradedItemsContainer = $('.graded-items-container');
+        const gradedItemsStatus = $('.graded-items-status');
+
+        function displayGradedItems(gradedItems) {
+            if (gradedItems.length == 0) {
+                gradedItemsContainer.empty();
+                gradedItemsStatus.show();
+                gradedItemsStatus.text('There are no tests, quizzes, or projects for this day.');
+                
+                return;
+            }
+
+            $('#graded-items-view span.badge').text(gradedItems.length);
+            $('#graded-items-view span.badge').show();
+            gradedItemsStatus.hide();
+            gradedItemsContainer.empty();
+
+            gradedItems.sort((a, b) => {
+                let typeA = 1; // like mr a
+                switch (a.type) {
+                    case 'project':
+                        typeA = 3;
+                        break;
+                    case 'test':
+                        typeA = 2;
+                        break;
+                }
+
+                let typeB = 1;
+                switch (b.type) {
+                    case 'project':
+                        typeB = 3;
+                        break;
+                    case 'test':
+                        typeB = 2;
+                        break;
+                }
+
+                if (typeA > typeB) return -1;
+                if (typeA < typeB) return 1;
+
+                if (typeA == typeB) {
+                    if (a.priority > b.priority) return -1;
+                    if (a.priority < b.priority) return 1;
+
+                    return 0;
+                }
+            });
+
+            gradedItems.forEach((item) => {
+                const div = $('<div>', {
+                    class: 'col-xs-12 col-md-6 graded-item'
+                });
+
+                let headingType = 1;
+                if (item.type == 'test') headingType = 2;
+                if (item.type == 'quiz') headingType = 3;
+                const heading = $(`<h${headingType}>`, {
+                    text: `${item.title} ${item.type.charAt(0).toUpperCase() + item.type.substring(1)}`,
+                    title: item.type
+                });
+                $('<small>', { class: '', text: ` Priority ${item.priority}`}).appendTo(heading);
+                div.append(heading);
+                $('<p>', {
+                    class: 'graded-item-description',
+                    text: item.description
+                }).appendTo(div);
+
+                if (item.links.length > 0) {
+                    $('<i>', { class: 'fa fa-link'}).appendTo(div);
+                    div.append(item.links.map(function (i) {
+                        return $('<a>', { href: i, target: 'new', text: i + ' ' });
+                    }));
+                }
+
+                gradedItemsContainer.append(div);
+            });
+
+        }
+        // -------------------------------------------------------------------------------------------------
+
         const courseSelect = $('#new-assignment-course-name option');
         const courses = $.map(courseSelect, function(option) {
             return option.value;
@@ -312,7 +441,6 @@ Module('work-date',
             });
             updateTooltips();
         }
-        updateEventHandlers();
 
         /* Clicking on a schedule item will change the course name select. */
         $('#dateSchedule td').click(function() {
@@ -333,5 +461,7 @@ Module('work-date',
             const percentSize = (parseInt($(this).data('length')) / scheduleDuration) * 100;
             $(this).animate({ width: percentSize+'%' }, 1000);
         });
+
+        changeView(window.location.hash.replace('#', '')); // Start everything
     }
 );
