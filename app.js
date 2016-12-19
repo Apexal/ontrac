@@ -19,6 +19,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const mongodb = require('./server/modules/mongodb.js');
 
 const callbackURL = `http://${config[env].ip}:${config[env].port}/auth/google/callback`;
+if (process.env.GOOGLE_CALLBACK_URL) callbackURL = process.env.GOOGLE_CALLBACK_URL + '/auth/google/callback';
+
 console.log(callbackURL);
 passport.use(new GoogleStrategy({
         clientID: config.auth.google_client_id,
