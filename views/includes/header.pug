@@ -1,13 +1,16 @@
-nav.navbar.navbar-default.navbar-fixed-top
-    div(class=( loggedIn ? 'container' : 'container' ))
-        .navbar-header
-            button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#top-navbar-collapse', aria-expanded='false')
-                span.sr-only Toggle navigation
-                span.icon-bar
-                span.icon-bar
-                span.icon-bar
-            a.navbar-brand(href='#', title='OnTrac 2: Electric Boogaloo') OnTrac
-        .collapse.navbar-collapse(id='top-navbar-collapse')
-            include /includes/navbar/links
-            
-                
+header.mdl-layout__header.mdl-color--grey-100.mdl-color-text--grey-600
+  .mdl-layout__header-row
+    span.mdl-layout-title Home
+    .mdl-layout-spacer
+    .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
+      label.mdl-button.mdl-js-button.mdl-button--icon(for='search')
+        i.material-icons search
+      .mdl-textfield__expandable-holder
+        input#search.mdl-textfield__input(type='text')
+        label.mdl-textfield__label(for='search') Enter your query...
+    button#hdrbtn.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--icon
+      i.material-icons more_vert
+    ul.mdl-menu.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right(for='hdrbtn')
+      li.mdl-menu__item About
+      li.mdl-menu__item Contact
+      li.mdl-menu__item Legal information

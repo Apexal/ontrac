@@ -13,8 +13,11 @@ html
       title= defaultTitle
     
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.css')
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-    link(rel='stylesheet', href='http://bootswatch.com/cosmo/bootstrap.min.css')
+    
+    link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
+    link(rel="stylesheet", href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css")
+    script(defer, src="https://code.getmdl.io/1.2.1/material.min.js")
+
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
     link(rel='stylesheet', href='http://code.jquery.com/ui/1.12.1/themes/ui-darkness/jquery-ui.css')
     link(rel='stylesheet', href='/css/style.css')
@@ -22,21 +25,22 @@ html
     script(src='https://code.jquery.com/jquery-3.1.1.min.js')
     script(src='http://code.jquery.com/ui/1.12.1/jquery-ui.min.js')
   body
-    header
+    .mdl-layout.mdl-js-layout.mdl-layout--fixed-drawer.mdl-layout--fixed-header
+      
       include /includes/header
-    
-    main
-      div(class=( loggedIn ? 'container loggedIn' : 'container' ))
-        include /includes/alerts
-        
-        block content
-    
-    footer
-      include /includes/footer
-    
-    // Scripts
-    
+      
+      include /includes/drawer
+
+      main.mdl-layout__content.mdl-color--grey-100
+        .mdl-grid(class=( loggedIn ? 'mdl-grid loggedIn' : 'mdl-grid' ))
+          include /includes/alerts
+          
+          block content
+      
+      footer
+        include /includes/footer
+      
+    // Scripts 
     script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.js')
-    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-    script(src='/js/script.js')
+    //script(src='/js/script.js')
